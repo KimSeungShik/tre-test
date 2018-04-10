@@ -1,0 +1,184 @@
+newman
+
+TEST-V1_1-Packet
+
+❏ Setup
+↳ 시스템 어드민 로그인
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.21KB, 5.2s]
+  ✓  status code is 200
+
+↳ 운영사 생성
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/company [200 OK, 815B, 156ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+
+↳ 운영사 어드민 로그인
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.22KB, 113ms]
+  ✓  status code is 200
+
+↳ 차량 생성
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle [200 OK, 865B, 16ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+
+↳ 차량 활성화
+  PUT https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ba07bc80-235d-11e8-9570-956d65b68a0a/activate [200 OK, 863B, 27ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Vehicle should be activated
+
+↳ 센서 생성 OBD
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor [200 OK, 756B, 41ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+
+↳ 센서 OBD 차량 부착
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ba35f870-235d-11e8-9570-956d65b68a0a/vehicle/ba07bc80-235d-11e8-9570-956d65b68a0a [200 OK, 776B, 23ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ { missing: [],
+  │   error: null,
+  │   valid: true,
+  │   errorCodes: 
+  │    { INVALID_TYPE: 0,
+  │      ENUM_MISMATCH: 1,
+  │      ANY_OF_MISSING: 10,
+  │      ONE_OF_MISSING: 11,
+  │      ONE_OF_MULTIPLE: 12,
+  │      NOT_PASSED: 13,
+  │      NUMBER_MULTIPLE_OF: 100,
+  │      NUMBER_MINIMUM: 101,
+  │      NUMBER_MINIMUM_EXCLUSIVE: 102,
+  │      NUMBER_MAXIMUM: 103,
+  │      NUMBER_MAXIMUM_EXCLUSIVE: 104,
+  │      NUMBER_NOT_A_NUMBER: 105,
+  │      STRING_LENGTH_SHORT: 200,
+  │      STRING_LENGTH_LONG: 201,
+  │      STRING_PATTERN: 202,
+  │      OBJECT_PROPERTIES_MINIMUM: 300,
+  │      OBJECT_PROPERTIES_MAXIMUM: 301,
+  │      OBJECT_REQUIRED: 302,
+  │      OBJECT_ADDITIONAL_PROPERTIES: 303,
+  │      OBJECT_DEPENDENCY_KEY: 304,
+  │      ARRAY_LENGTH_SHORT: 400,
+  │      ARRAY_LENGTH_LONG: 401,
+  │      ARRAY_UNIQUE: 402,
+  │      ARRAY_ADDITIONAL_ITEMS: 403,
+  │      FORMAT_CUSTOM: 500,
+  │      KEYWORD_CUSTOM: 501,
+  │      CIRCULAR_REFERENCE: 600,
+  │      UNKNOWN_PROPERTY: 1000 },
+  │   tv4: [Circular] }
+  └
+  ✓  Valid vehicle Id
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │        7 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │        7 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │       14 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 6.5s                      │
+├───────────────────────────────────────────────┤
+│ total data received: 4.6KB (approx)           │
+├───────────────────────────────────────────────┤
+│ average response time: 794ms                  │
+└───────────────────────────────────────────────┘
+MQTT: obdClient connected
+MQTT: sent messagepack multi microtrip
+MQTT: connection closed
+newman
+
+TEST-V1_1-Packet
+
+❏ Check
+↳ 최신 트립 조회 - OBD
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ba07bc80-235d-11e8-9570-956d65b68a0a/trip/latest?deviceType=OBD [200 OK, 650B, 15ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Device Types valid
+
+↳ 최신 마이크로트립 조회 - OBD
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ba07bc80-235d-11e8-9570-956d65b68a0a/microtrip/latest?deviceType=OBD [200 OK, 1.04KB, 20ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Device Types valid
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │        2 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │        4 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        2 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │        6 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 312ms                     │
+├───────────────────────────────────────────────┤
+│ total data received: 1.17KB (approx)          │
+├───────────────────────────────────────────────┤
+│ average response time: 17ms                   │
+└───────────────────────────────────────────────┘
+newman
+
+TEST-V1_1-Packet
+
+❏ Cleanup
+↳ 시스템 어드민 로그인
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.21KB, 112ms]
+  ✓  status code is 200
+
+↳ 운영사 삭제
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/b9b97570-235d-11e8-9570-956d65b68a0a [200 OK, 206B, 41ms]
+  ✓  status code is 200
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │        2 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │        2 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │        2 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 409ms                     │
+├───────────────────────────────────────────────┤
+│ total data received: 980B (approx)            │
+├───────────────────────────────────────────────┤
+│ average response time: 76ms                   │
+└───────────────────────────────────────────────┘
+All tests finished

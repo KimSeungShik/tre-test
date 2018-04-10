@@ -1,0 +1,13 @@
+{
+  "name": "sf_platform_newman_test",
+  "version": "1.0.0",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.6.0",
+    "moment": "^2.20.1",
+    "mqtt": "^2.15.3",
+    "msgpack-lite": "^0.1.26",
+    "newman": "^3.9.3"
+  }
+}

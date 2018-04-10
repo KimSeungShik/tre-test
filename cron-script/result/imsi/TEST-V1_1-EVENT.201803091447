@@ -1,0 +1,523 @@
+newman
+
+TEST-V1_1-EVENT
+
+❏ Setup
+↳ 시스템 어드민 로그인
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.21KB, 176ms]
+  ✓  status code is 200
+
+↳ 운영사 생성
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/company [200 OK, 811B, 132ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+
+↳ 운영사 어드민 로그인
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.22KB, 110ms]
+  ✓  status code is 200
+
+↳ 차량 생성
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle [200 OK, 864B, 15ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+
+↳ 차량 활성화
+  PUT https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/activate [200 OK, 862B, 45ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Vehicle should be activated
+
+↳ 센서 생성 GPS
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor [200 OK, 756B, 23ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+
+↳ 센서 생성 OBD
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor [200 OK, 756B, 26ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+
+↳ 센서 생성 ADAS
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor [200 OK, 757B, 27ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+
+↳ 센서 생성 BLACKBOX
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor [200 OK, 761B, 22ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+
+↳ 센서 GPS 차량 부착
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/4b883af0-235d-11e8-9a57-bf7af28e956c/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c [200 OK, 776B, 19ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ { missing: [],
+  │   error: null,
+  │   valid: true,
+  │   errorCodes: 
+  │    { INVALID_TYPE: 0,
+  │      ENUM_MISMATCH: 1,
+  │      ANY_OF_MISSING: 10,
+  │      ONE_OF_MISSING: 11,
+  │      ONE_OF_MULTIPLE: 12,
+  │      NOT_PASSED: 13,
+  │      NUMBER_MULTIPLE_OF: 100,
+  │      NUMBER_MINIMUM: 101,
+  │      NUMBER_MINIMUM_EXCLUSIVE: 102,
+  │      NUMBER_MAXIMUM: 103,
+  │      NUMBER_MAXIMUM_EXCLUSIVE: 104,
+  │      NUMBER_NOT_A_NUMBER: 105,
+  │      STRING_LENGTH_SHORT: 200,
+  │      STRING_LENGTH_LONG: 201,
+  │      STRING_PATTERN: 202,
+  │      OBJECT_PROPERTIES_MINIMUM: 300,
+  │      OBJECT_PROPERTIES_MAXIMUM: 301,
+  │      OBJECT_REQUIRED: 302,
+  │      OBJECT_ADDITIONAL_PROPERTIES: 303,
+  │      OBJECT_DEPENDENCY_KEY: 304,
+  │      ARRAY_LENGTH_SHORT: 400,
+  │      ARRAY_LENGTH_LONG: 401,
+  │      ARRAY_UNIQUE: 402,
+  │      ARRAY_ADDITIONAL_ITEMS: 403,
+  │      FORMAT_CUSTOM: 500,
+  │      KEYWORD_CUSTOM: 501,
+  │      CIRCULAR_REFERENCE: 600,
+  │      UNKNOWN_PROPERTY: 1000 },
+  │   tv4: [Circular] }
+  └
+  ✓  Valid vehicle Id
+
+↳ 센서 OBD 차량 부착
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/4b9ef743-235d-11e8-9a57-bf7af28e956c/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c [200 OK, 776B, 18ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ { missing: [],
+  │   error: null,
+  │   valid: true,
+  │   errorCodes: 
+  │    { INVALID_TYPE: 0,
+  │      ENUM_MISMATCH: 1,
+  │      ANY_OF_MISSING: 10,
+  │      ONE_OF_MISSING: 11,
+  │      ONE_OF_MULTIPLE: 12,
+  │      NOT_PASSED: 13,
+  │      NUMBER_MULTIPLE_OF: 100,
+  │      NUMBER_MINIMUM: 101,
+  │      NUMBER_MINIMUM_EXCLUSIVE: 102,
+  │      NUMBER_MAXIMUM: 103,
+  │      NUMBER_MAXIMUM_EXCLUSIVE: 104,
+  │      NUMBER_NOT_A_NUMBER: 105,
+  │      STRING_LENGTH_SHORT: 200,
+  │      STRING_LENGTH_LONG: 201,
+  │      STRING_PATTERN: 202,
+  │      OBJECT_PROPERTIES_MINIMUM: 300,
+  │      OBJECT_PROPERTIES_MAXIMUM: 301,
+  │      OBJECT_REQUIRED: 302,
+  │      OBJECT_ADDITIONAL_PROPERTIES: 303,
+  │      OBJECT_DEPENDENCY_KEY: 304,
+  │      ARRAY_LENGTH_SHORT: 400,
+  │      ARRAY_LENGTH_LONG: 401,
+  │      ARRAY_UNIQUE: 402,
+  │      ARRAY_ADDITIONAL_ITEMS: 403,
+  │      FORMAT_CUSTOM: 500,
+  │      KEYWORD_CUSTOM: 501,
+  │      CIRCULAR_REFERENCE: 600,
+  │      UNKNOWN_PROPERTY: 1000 },
+  │   tv4: [Circular] }
+  └
+  ✓  Valid vehicle Id
+
+↳ 센서 ADAS 차량 부착
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/4bb628c0-235d-11e8-9a57-bf7af28e956c/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c [200 OK, 777B, 18ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ { missing: [],
+  │   error: null,
+  │   valid: true,
+  │   errorCodes: 
+  │    { INVALID_TYPE: 0,
+  │      ENUM_MISMATCH: 1,
+  │      ANY_OF_MISSING: 10,
+  │      ONE_OF_MISSING: 11,
+  │      ONE_OF_MULTIPLE: 12,
+  │      NOT_PASSED: 13,
+  │      NUMBER_MULTIPLE_OF: 100,
+  │      NUMBER_MINIMUM: 101,
+  │      NUMBER_MINIMUM_EXCLUSIVE: 102,
+  │      NUMBER_MAXIMUM: 103,
+  │      NUMBER_MAXIMUM_EXCLUSIVE: 104,
+  │      NUMBER_NOT_A_NUMBER: 105,
+  │      STRING_LENGTH_SHORT: 200,
+  │      STRING_LENGTH_LONG: 201,
+  │      STRING_PATTERN: 202,
+  │      OBJECT_PROPERTIES_MINIMUM: 300,
+  │      OBJECT_PROPERTIES_MAXIMUM: 301,
+  │      OBJECT_REQUIRED: 302,
+  │      OBJECT_ADDITIONAL_PROPERTIES: 303,
+  │      OBJECT_DEPENDENCY_KEY: 304,
+  │      ARRAY_LENGTH_SHORT: 400,
+  │      ARRAY_LENGTH_LONG: 401,
+  │      ARRAY_UNIQUE: 402,
+  │      ARRAY_ADDITIONAL_ITEMS: 403,
+  │      FORMAT_CUSTOM: 500,
+  │      KEYWORD_CUSTOM: 501,
+  │      CIRCULAR_REFERENCE: 600,
+  │      UNKNOWN_PROPERTY: 1000 },
+  │   tv4: [Circular] }
+  └
+  ✓  Valid vehicle Id
+
+↳ 센서 BLACKBOX 차량 부착
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/4bcc6fe0-235d-11e8-9a57-bf7af28e956c/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c [200 OK, 781B, 19ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ { missing: [],
+  │   error: null,
+  │   valid: true,
+  │   errorCodes: 
+  │    { INVALID_TYPE: 0,
+  │      ENUM_MISMATCH: 1,
+  │      ANY_OF_MISSING: 10,
+  │      ONE_OF_MISSING: 11,
+  │      ONE_OF_MULTIPLE: 12,
+  │      NOT_PASSED: 13,
+  │      NUMBER_MULTIPLE_OF: 100,
+  │      NUMBER_MINIMUM: 101,
+  │      NUMBER_MINIMUM_EXCLUSIVE: 102,
+  │      NUMBER_MAXIMUM: 103,
+  │      NUMBER_MAXIMUM_EXCLUSIVE: 104,
+  │      NUMBER_NOT_A_NUMBER: 105,
+  │      STRING_LENGTH_SHORT: 200,
+  │      STRING_LENGTH_LONG: 201,
+  │      STRING_PATTERN: 202,
+  │      OBJECT_PROPERTIES_MINIMUM: 300,
+  │      OBJECT_PROPERTIES_MAXIMUM: 301,
+  │      OBJECT_REQUIRED: 302,
+  │      OBJECT_ADDITIONAL_PROPERTIES: 303,
+  │      OBJECT_DEPENDENCY_KEY: 304,
+  │      ARRAY_LENGTH_SHORT: 400,
+  │      ARRAY_LENGTH_LONG: 401,
+  │      ARRAY_UNIQUE: 402,
+  │      ARRAY_ADDITIONAL_ITEMS: 403,
+  │      FORMAT_CUSTOM: 500,
+  │      KEYWORD_CUSTOM: 501,
+  │      CIRCULAR_REFERENCE: 600,
+  │      UNKNOWN_PROPERTY: 1000 },
+  │   tv4: [Circular] }
+  └
+  ✓  Valid vehicle Id
+
+↳ 디렉터 생성
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/director [200 OK, 599B, 141ms]
+  ✓  status code is 200
+  ┌
+  │ 'Validation failed: ', null
+  │ { missing: [],
+  │   error: null,
+  │   valid: true,
+  │   errorCodes: 
+  │    { INVALID_TYPE: 0,
+  │      ENUM_MISMATCH: 1,
+  │      ANY_OF_MISSING: 10,
+  │      ONE_OF_MISSING: 11,
+  │      ONE_OF_MULTIPLE: 12,
+  │      NOT_PASSED: 13,
+  │      NUMBER_MULTIPLE_OF: 100,
+  │      NUMBER_MINIMUM: 101,
+  │      NUMBER_MINIMUM_EXCLUSIVE: 102,
+  │      NUMBER_MAXIMUM: 103,
+  │      NUMBER_MAXIMUM_EXCLUSIVE: 104,
+  │      NUMBER_NOT_A_NUMBER: 105,
+  │      STRING_LENGTH_SHORT: 200,
+  │      STRING_LENGTH_LONG: 201,
+  │      STRING_PATTERN: 202,
+  │      OBJECT_PROPERTIES_MINIMUM: 300,
+  │      OBJECT_PROPERTIES_MAXIMUM: 301,
+  │      OBJECT_REQUIRED: 302,
+  │      OBJECT_ADDITIONAL_PROPERTIES: 303,
+  │      OBJECT_DEPENDENCY_KEY: 304,
+  │      ARRAY_LENGTH_SHORT: 400,
+  │      ARRAY_LENGTH_LONG: 401,
+  │      ARRAY_UNIQUE: 402,
+  │      ARRAY_ADDITIONAL_ITEMS: 403,
+  │      FORMAT_CUSTOM: 500,
+  │      KEYWORD_CUSTOM: 501,
+  │      CIRCULAR_REFERENCE: 600,
+  │      UNKNOWN_PROPERTY: 1000 },
+  │   tv4: [Circular] }
+  └
+  ✓  Valid scehma
+
+↳ 드라이버 생성
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/driver [200 OK, 593B, 129ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │       15 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │       15 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │       33 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 2.9s                      │
+├───────────────────────────────────────────────┤
+│ total data received: 8.12KB (approx)          │
+├───────────────────────────────────────────────┤
+│ average response time: 61ms                   │
+└───────────────────────────────────────────────┘
+MQTT: obdClient for sendCollisionWarningParking connected
+MQTT: obdClient for sendDiagnostic connected
+MQTT: adasClient connected
+MQTT: obdClient for sendBatteryWarning connected
+MQTT: obdClient for sendTrunoffWarning connected
+MQTT: sent event type: 101
+MQTT: connection closed
+MQTT: sent event type: 104
+MQTT: connection closed
+MQTT: sent event type: 103
+MQTT: connection closed
+MQTT: sent event type: 106
+MQTT: connection closed
+MQTT: sent event type: 107
+MQTT: connection closed
+MQTT: obdClient for sendCollisionWarningDriving connected
+MQTT: obdClient for sendUnpluggedWarning connected
+MQTT: sent event type: 102
+MQTT: connection closed
+MQTT: sent event type: 105
+MQTT: connection closed
+newman
+
+TEST-V1_1-EVENT
+
+❏ Check Events
+↳ Event 리스트 조회 - 전체
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1_1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/events?limit=10 [200 OK, 3.29KB, 30ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Event Types valid
+
+↳ Event 리스트 조회 - Diagnostic
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1_1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/events?limit=10&eventType=101 [200 OK, 740B, 17ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Event Types valid
+
+↳ Event 리스트 조회 - Collision Warning(Driving)
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1_1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/events?limit=10&eventType=102 [200 OK, 746B, 206ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Event Types valid
+
+↳ Event 리스트 조회 - Collision Warning(Parking)
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1_1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/events?limit=10&eventType=103 [200 OK, 744B, 16ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Event Types valid
+
+↳ Event 리스트 조회 - Battery Warning
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1_1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/events?limit=10&eventType=104 [200 OK, 718B, 18ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Event Types valid
+
+↳ Event 리스트 조회 - Unplugged Warning
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1_1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/events?limit=10&eventType=105 [200 OK, 749B, 18ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Event Types valid
+
+↳ Event 리스트 조회 - Trunoff Warning
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1_1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/events?limit=10&eventType=106 [200 OK, 734B, 16ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Event Types valid
+
+↳ Event 리스트 조회 - Adas Event
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1_1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/events?limit=10&eventType=107 [200 OK, 779B, 15ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Event Types valid
+
+↳ 최신 event 조회
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1_1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/event/latest [200 OK, 732B, 52ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+
+↳ 최신 event 조회 Diagnostic
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1_1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/event/latest?eventType=101 [200 OK, 693B, 18ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Event Types valid
+
+↳ 최신 event 조회 Collision Warning(Driving)
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1_1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/event/latest?eventType=102 [200 OK, 699B, 16ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Event Types valid
+
+↳ 최신 event 조회 Collision Warning(Parking)
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1_1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/event/latest?eventType=103 [200 OK, 697B, 15ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Event Types valid
+
+↳ 최신 event 조회 Battery Warning
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1_1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/event/latest?eventType=104 [200 OK, 671B, 15ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Event Types valid
+
+↳ 최신 event 조회 Unplugged Warning
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1_1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/event/latest?eventType=105 [200 OK, 702B, 19ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Event Types valid
+
+↳ 최신 event 조회 Turnoff Warning
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1_1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/event/latest?eventType=106 [200 OK, 687B, 15ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Event Types valid
+
+↳ 최신 event 조회 Adas Event
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1_1/vehicle/4b58c682-235d-11e8-9a57-bf7af28e956c/event/latest?eventType=107 [200 OK, 732B, 17ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Event Types valid
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │       16 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │       16 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │       47 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 2.5s                      │
+├───────────────────────────────────────────────┤
+│ total data received: 9.78KB (approx)          │
+├───────────────────────────────────────────────┤
+│ average response time: 31ms                   │
+└───────────────────────────────────────────────┘
+newman
+
+TEST-V1_1-EVENT
+
+❏ Cleanup
+↳ 시스템 어드민 로그인
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.21KB, 114ms]
+  ✓  status code is 200
+
+↳ 운영사 삭제
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/4b0e28f0-235d-11e8-9a57-bf7af28e956c [200 OK, 206B, 64ms]
+  ✓  status code is 200
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │        2 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │        2 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │        2 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 427ms                     │
+├───────────────────────────────────────────────┤
+│ total data received: 980B (approx)            │
+├───────────────────────────────────────────────┤
+│ average response time: 89ms                   │
+└───────────────────────────────────────────────┘
+All tests finished

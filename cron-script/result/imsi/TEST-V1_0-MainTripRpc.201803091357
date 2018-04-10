@@ -1,0 +1,536 @@
+newman
+
+0-1. TEST-V1_0-MainTripRpc
+
+❏ 0. Setup
+↳ 0.1 login
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.21KB, 236ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 0.2 create a company1
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/company [200 OK, 878B, 135ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 0.3 create a co-company1
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/company [200 OK, 867B, 136ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+  ✓  Valid scehma
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │        3 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │        3 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │       12 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 981ms                     │
+├───────────────────────────────────────────────┤
+│ total data received: 2.15KB (approx)          │
+├───────────────────────────────────────────────┤
+│ average response time: 169ms                  │
+└───────────────────────────────────────────────┘
+newman
+
+0-1. TEST-V1_0-MainTripRpc
+
+❏ 1. Create Job
+↳ 1.1 login
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.24KB, 115ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 1.2 create a director
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/director [200 OK, 592B, 337ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 1.3 create a vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle [200 OK, 883B, 16ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 1.4 create a driver
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/driver [200 OK, 586B, 349ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 1.5-1 create a OBD
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor [200 OK, 772B, 29ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 1.5-2 create a GPS
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor [200 OK, 772B, 24ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 1.5-3 create a ADAS
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor [200 OK, 775B, 22ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 1.5-4 create a BLACKBOX
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor [200 OK, 782B, 29ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │        8 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │        8 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │       31 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 1945ms                    │
+├───────────────────────────────────────────────┤
+│ total data received: 4.24KB (approx)          │
+├───────────────────────────────────────────────┤
+│ average response time: 115ms                  │
+└───────────────────────────────────────────────┘
+newman
+
+0-1. TEST-V1_0-MainTripRpc
+
+❏ 2. Assign and Attach Job
+↳ 2.1 assign vehicle to director
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a/director/4fbb6181-2356-11e8-9570-956d65b68a0a [200 OK, 883B, 20ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Valid director Id
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 2.2 activity vehicle
+  PUT https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a/activate [200 OK, 881B, 19ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Valid director Id
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 2.3-1 attach OBD to vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/5044dcd0-2356-11e8-9570-956d65b68a0a/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a [200 OK, 797B, 21ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Valid vehicle Id
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 2.3-2 attach GPS to vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/505c8380-2356-11e8-9570-956d65b68a0a/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a [200 OK, 797B, 19ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Valid vehicle Id
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 2.3-3 attach ADAS to vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/50747850-2356-11e8-9570-956d65b68a0a/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a [200 OK, 800B, 24ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Valid vehicle Id
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 2.3-4 attach BLACKBOX to vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/508bd0e0-2356-11e8-9570-956d65b68a0a/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a [200 OK, 807B, 20ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Valid vehicle Id
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 2.4 assign driver to vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a/driver/4ffcb040-2356-11e8-9570-956d65b68a0a [200 OK, 881B, 25ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │        7 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │        7 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │       34 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 1039ms                    │
+├───────────────────────────────────────────────┤
+│ total data received: 3.8KB (approx)           │
+├───────────────────────────────────────────────┤
+│ average response time: 21ms                   │
+└───────────────────────────────────────────────┘
+MQTT: obdClient connected
+MQTT: gpsClient connected
+MQTT: sent microtrip type:4 cnt: 1
+MQTT: sent microtrip type:2 cnt: 1
+MQTT: blacboxClient connected
+MQTT: adasClient connected
+MQTT: sent microtrip type:8 cnt: 1
+MQTT: sent microtrip type:6 cnt: 1
+MQTT: sent microtrip type:4 cnt: 2
+MQTT: sent microtrip type:2 cnt: 2
+MQTT: sent microtrip type:8 cnt: 2
+MQTT: sent microtrip type:6 cnt: 2
+MQTT: sent microtrip type:4 cnt: 3
+MQTT: sent microtrip type:2 cnt: 3
+MQTT: sent microtrip type:8 cnt: 3
+MQTT: sent microtrip type:6 cnt: 3
+MQTT: sent microtrip type:4 cnt: 4
+MQTT: sent microtrip type:2 cnt: 4
+MQTT: sent microtrip type:8 cnt: 4
+MQTT: sent microtrip type:6 cnt: 4
+MQTT: sent microtrip type:4 cnt: 5
+MQTT: sent microtrip type:2 cnt: 5
+MQTT: sent microtrip type:8 cnt: 5
+MQTT: sent microtrip type:6 cnt: 5
+MQTT: sent microtrip type:4 cnt: 6
+MQTT: sent microtrip type:2 cnt: 6
+MQTT: sent microtrip type:8 cnt: 6
+MQTT: sent microtrip type:6 cnt: 6
+MQTT: sent microtrip type:4 cnt: 7
+MQTT: sent microtrip type:2 cnt: 7
+MQTT: sent microtrip type:8 cnt: 7
+MQTT: sent microtrip type:6 cnt: 7
+MQTT: sent microtrip type:4 cnt: 8
+MQTT: sent microtrip type:2 cnt: 8
+MQTT: sent microtrip type:8 cnt: 8
+MQTT: sent microtrip type:6 cnt: 8
+MQTT: sent microtrip type:4 cnt: 9
+MQTT: sent microtrip type:2 cnt: 9
+MQTT: sent microtrip type:8 cnt: 9
+MQTT: sent microtrip type:6 cnt: 9
+MQTT: sent microtrip type:4 cnt: 10
+MQTT: sent microtrip type:2 cnt: 10
+MQTT: sent microtrip type:8 cnt: 10
+MQTT: sent microtrip type:6 cnt: 10
+MQTT: sent trip type: 3
+MQTT: connection closed
+MQTT: sent trip type: 1
+MQTT: connection closed
+MQTT: sent trip type: 7
+MQTT: connection closed
+MQTT: sent trip type: 5
+MQTT: connection closed
+newman
+
+0-1. TEST-V1_0-MainTripRpc
+
+❏ 4. Get Lastest Trip
+↳ 4.1 get lastest OBD
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a/trip/latest?deviceType=OBD [200 OK, 829B, 19ms]
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+  ✓  Valid scehma
+
+↳ 4.2 get lastest GPS
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a/trip/latest?deviceType=GPS [200 OK, 786B, 18ms]
+  ✓  Status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 4.3 get lastest ADAS
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a/trip/latest?deviceType=ADAS [200 OK, 833B, 19ms]
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+  ✓  Valid scehma
+
+↳ 4.4 get lastest BLACKBOX
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a/trip/latest?deviceType=BLACKBOX [200 OK, 762B, 31ms]
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+  ✓  Valid scehma
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │        4 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │        4 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │       15 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 656ms                     │
+├───────────────────────────────────────────────┤
+│ total data received: 2.12KB (approx)          │
+├───────────────────────────────────────────────┤
+│ average response time: 21ms                   │
+└───────────────────────────────────────────────┘
+newman
+
+0-1. TEST-V1_0-MainTripRpc
+
+❏ 5. Get Microtrip Using Trip ID
+↳ 5.1 get OBD microtrip
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/trip/514b2940-2356-11e8-9570-956d65b68a0a/microtrips?limit=10 [200 OK, 5.1KB, 20ms]
+  ✓  Status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 5.2 get GPS microtrip
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/trip/514b9e70-2356-11e8-9a57-bf7af28e956c/microtrips?limit=10 [200 OK, 4.68KB, 20ms]
+  ✓  Status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 5.3 get ADAS microtrip
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/trip/514c88d0-2356-11e8-8391-833dc5b9c077/microtrips?limit=10 [200 OK, 5.14KB, 19ms]
+  ✓  Status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 5.4 get BLACKBOX microtrip
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/trip/514c61c0-2356-11e8-8391-833dc5b9c077/microtrips?limit=10 [200 OK, 4.45KB, 22ms]
+  ✓  Status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │        4 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │        8 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        4 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │       12 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 704ms                     │
+├───────────────────────────────────────────────┤
+│ total data received: 18.35KB (approx)         │
+├───────────────────────────────────────────────┤
+│ average response time: 20ms                   │
+└───────────────────────────────────────────────┘
+newman
+
+0-1. TEST-V1_0-MainTripRpc
+
+❏ 7. Unassign and Detach Job
+↳ 7.1 unassign driver to vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a/driver/4ffcb040-2356-11e8-9570-956d65b68a0a [200 OK, 884B, 26ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 7.2-1 detach OBD from vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/5044dcd0-2356-11e8-9570-956d65b68a0a/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a [200 OK, 761B, 12ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 7.2-2 detach GPS from vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/505c8380-2356-11e8-9570-956d65b68a0a/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a [200 OK, 761B, 15ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 7.2-3 detach ADAS from vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/50747850-2356-11e8-9570-956d65b68a0a/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a [200 OK, 764B, 14ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 7.2-4 detach BLACKBOX from vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/508bd0e0-2356-11e8-9570-956d65b68a0a/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a [200 OK, 771B, 14ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 7.3 inactivity a vehicle
+  PUT https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a/activate [200 OK, 886B, 22ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Valid director Id
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 7.4 unassign vehicle to director
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a/director/4fbb6181-2356-11e8-9570-956d65b68a0a [200 OK, 886B, 20ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │        7 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │        7 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │       25 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 1069ms                    │
+├───────────────────────────────────────────────┤
+│ total data received: 3.79KB (approx)          │
+├───────────────────────────────────────────────┤
+│ average response time: 17ms                   │
+└───────────────────────────────────────────────┘
+newman
+
+0-1. TEST-V1_0-MainTripRpc
+
+❏ 8. Delete Job
+↳ 8.1 delete a director
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/director/4fbb6181-2356-11e8-9570-956d65b68a0a [200 OK, 206B, 255ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 8.2 delete a vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/4fe6de50-2356-11e8-9570-956d65b68a0a [200 OK, 206B, 20ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 8.3 delete a driver
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/driver/4ffcb040-2356-11e8-9570-956d65b68a0a [200 OK, 206B, 18ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 8.4-1 delete a OBD
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/5044dcd0-2356-11e8-9570-956d65b68a0a [200 OK, 206B, 17ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 8.4-2 delete a GPS
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/505c8380-2356-11e8-9570-956d65b68a0a [200 OK, 206B, 28ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 8.4-3 delete a ADAS
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/50747850-2356-11e8-9570-956d65b68a0a [200 OK, 206B, 17ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 8.4-4 delete a BLACKBOX
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/508bd0e0-2356-11e8-9570-956d65b68a0a [200 OK, 206B, 16ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │        7 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │        7 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │       14 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 1226ms                    │
+├───────────────────────────────────────────────┤
+│ total data received: 0B (approx)              │
+├───────────────────────────────────────────────┤
+│ average response time: 53ms                   │
+└───────────────────────────────────────────────┘
+newman
+
+0-1. TEST-V1_0-MainTripRpc
+
+❏ 9. Cleanup
+↳ 9-1-1 delete a co-company1
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/4f4212d5-2356-11e8-9570-956d65b68a0a [200 OK, 206B, 37ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 9.2-1 delete a company1
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/4f192e10-2356-11e8-9570-956d65b68a0a [200 OK, 206B, 38ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │        2 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │        2 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │        4 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 401ms                     │
+├───────────────────────────────────────────────┤
+│ total data received: 0B (approx)              │
+├───────────────────────────────────────────────┤
+│ average response time: 37ms                   │
+└───────────────────────────────────────────────┘
+All tests finished

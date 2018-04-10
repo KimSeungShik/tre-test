@@ -1,0 +1,111 @@
+newman
+
+TEST-V1_0-Company_Create_Delete
+
+❏ Master Company 생성
+↳ login (sysadmin)
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.21KB, 5.2s]
+  ✓  Status code is 200
+
+↳ create a master company
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/company [200 OK, 819B, 150ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+
+❏ 협력사 생성 및 삭제
+↳ login (master admin)
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.2KB, 111ms]
+  ✓  Status code is 200
+
+↳ create a company-1
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/company [200 OK, 815B, 139ms]
+  ✓  Status code is 200
+
+↳ put a company-1 (권한없는 협력사 수정 403)
+  PUT https://smartfleet.sktelecom.com:8080/api/tre/v1/company/80f08490-2367-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 10ms]
+  ✓  Status code is 403 OK
+
+↳ create a company-1 재시도(500)
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/company [500 Internal Server Error, 400B, 12ms]
+  ✓  Status code is 500 OK(DUP)
+
+↳ delete a company-1
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/80f08490-2367-11e8-9570-956d65b68a0a [200 OK, 206B, 66ms]
+  ✓  Status code is 200
+
+↳ create a company-2
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/company [200 OK, 815B, 142ms]
+  ✓  Status code is 200
+
+❏ 협력사 정보조회 및 수정
+↳ login (협력사-2)
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.2KB, 113ms]
+  ✓  Status code is 200
+
+↳ my company 정보조회
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/company/me [200 OK, 809B, 10ms]
+  ✓  Status code is 200
+
+↳ put a company-2
+  PUT https://smartfleet.sktelecom.com:8080/api/tre/v1/company/815cdaf0-2367-11e8-8391-833dc5b9c077 [200 OK, 809B, 14ms]
+  ✓  Status code is 200
+  ✓  manager1->manager2 변경
+
+❏ Company 중복 삭제
+↳ login (master admin)
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.2KB, 120ms]
+  ✓  Status code is 200
+
+↳ delete a company-2
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/815cdaf0-2367-11e8-8391-833dc5b9c077 [200 OK, 206B, 35ms]
+  ✓  Status code is 200
+
+↳ delete a company-2 재시도(404)
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/815cdaf0-2367-11e8-8391-833dc5b9c077 [404 Not Found, 361B, 14ms]
+  ✓  Status code is 404 OK
+
+❏ 권한없이 Company 삭제
+↳ master company 정보조회
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/companies?serviceType=pccc&limit=1 [200 OK, 981B, 22ms]
+  ✓  Status code is 200
+
+↳ MA계정으로 master company 삭제시도(403)
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/80a2d9c4-2367-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 10ms]
+  ✓  Status code is 403 OK
+
+❏ Master Company 삭제
+↳ login (sysadmin)
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.21KB, 149ms]
+  ✓  Status code is 200
+
+↳ master company 정보조회
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/companies?serviceType=pccc&limit=1 [200 OK, 981B, 14ms]
+  ✓  Status code is 200
+
+↳ delete master company
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/80a2d9c4-2367-11e8-9570-956d65b68a0a [200 OK, 206B, 39ms]
+  ✓  Status code is 200
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │       19 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │       19 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │       21 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 8.8s                      │
+├───────────────────────────────────────────────┤
+│ total data received: 9.28KB (approx)          │
+├───────────────────────────────────────────────┤
+│ average response time: 333ms                  │
+└───────────────────────────────────────────────┘
+All test finished

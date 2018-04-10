@@ -1,0 +1,3270 @@
+{
+	"info": {
+		"name": "TEST-V1_2-SWING",
+		"_postman_id": "3ca31223-2a73-d104-e771-d9d77a627b56",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Setup",
+			"description": "",
+			"item": [
+				{
+					"name": "login (sysadmin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ad249a69-d1dd-40d0-9eb7-0f8dd30bca37",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin@smartfleet.sktelecom.com\",\"password\":\"smart2017.123$\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "create a company",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4002faab-5b8a-4126-8899-50a69d0aed88",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"companyId\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"companyId\", jsonData.id.id);",
+									"",
+									"pm.environment.set(\"swingSensorOriginIMEI\", \"012343638901234\");",
+									"pm.environment.set(\"swingSensorChangedIMEI\", \"112378648901234\");",
+									"",
+									"postman.setEnvironmentVariable(\"tokenPrefix\", jsonData.tokenPrefix);",
+									"postman.setEnvironmentVariable(\"swingSensorOriginTOKEN\", jsonData.tokenPrefix + 322333344445551);",
+									"postman.setEnvironmentVariable(\"swingSensorChangedTOKEN\", jsonData.tokenPrefix + 322333344445552);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        },",
+									"        \"phoneNo\":{",
+									"            \"type\": \"string\",",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        },",
+									"        \"email\":{",
+									"            \"type\": \"string\",",
+									"            \"pattern\":/^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}$/i",
+									"        },",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"number\" },",
+									"        \"name\": {\"type\":\"string\"},",
+									"        \"serviceType\": {\"type\":\"string\"},",
+									"        \"master\":{\"type\":\"boolean\"},",
+									"        \"masterId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"picPasswd\":{\"type\":\"string\"},",
+									"        \"picName\" : { \"type\" : \"string\" },",
+									"        \"picPhone\" : { \"$ref\": \"#/definitions/phoneNo\" },",
+									"        \"picEmail\" :  { \"$ref\": \"#/definitions/email\" },",
+									"        \"picDivision\":{\"type\":[\"string\", \"null\"]},",
+									"        \"sktManagerName\":{\"type\":[\"string\", \"null\"]},",
+									"        \"sktManagerEmail\":{ \"$ref\": \"#/definitions/email\" },",
+									"        \"cooperationTask\":{\"type\":[\"string\", \"null\"]},",
+									"        \"description\":{\"type\":[\"string\", \"null\"]},",
+									"        \"notifyHost\":{",
+									"            \"type\":[\"string\", \"null\"],",
+									"            \"pattern\": /^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$/",
+									"        },",
+									"        \"notifyMsgType\":{\"type\":[\"string\", \"null\"]},",
+									"        \"notifyErrIdleMin\":{\"type\":\"number\"},",
+									"        \"pwAccess\":{\"type\":[\"boolean\", \"null\"]},",
+									"        \"dataAnalytics\":{\"type\":[\"string\", \"null\"]}",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"",
+									"console.log(\"Validation failed: \", tv4.error);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"swingtest\",\n  \"serviceType\":\"swingtest\", \n  \"picName\":\"swingtest\", \n  \"picEmail\":\"test@swingtest.com\", \n  \"picPhone\":\"010-1114-6642\",\n  \"picPasswd\":\"test1234\",\n  \"picDivision\":\"사업1팀\",\n  \"sktManagerName\":\"manager1\",\n  \"sktManagerEmail\":\"xyz@xxx.com\",\n  \"cooperationTask\":\"수리\",\n  \"description\":\"additional description\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "login (master admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c867b22a-fdaf-4755-9997-59d981bb768c",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"test@swingtest.com\",\"password\":\"test1234\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "create vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1cd424d0-a980-45fe-9631-1ac141138234",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"vehicleId\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"vehicleId\", jsonData.id.id);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"category\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"usage\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"displacement\" : { \"type\" : [\"integer\",\"null\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehicleNo\": \"35아2245\",\n  \"modelName\": \"그랜져\",\n  \"modelCode\": \"123\",\n  \"vendor\": \"현대자동차\",\n  \"modelYear\" : \"2017\",\n  \"missionType\" : \"AUTO\",\n  \"fuelType\" : \"DIESEL\",\n  \"mileage\": 10\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "create sensor (original)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4d683248-f986-4339-b3eb-93204c5c7cc5",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"credentialsId\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"postman.setEnvironmentVariable(\"swingSensorOrigin\", jsonData.id.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"serialNo\": \"{{swingSensorOriginIMEI}}\",\n  \"credentialsId\":\"{{swingSensorOriginTOKEN}}\",\n  \"vendor\": \"bbb\",\n  \"type\": \"OBD\",\n  \"additionalInfo\":{\n  \"extra\":\"infoTest\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "create sensor (changed)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "13b807ef-8ec5-466e-8040-6804c7c03816",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"credentialsId\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(tv4);",
+									"",
+									"postman.setEnvironmentVariable(\"swingSensorChanged\", jsonData.id.id);",
+									"",
+									"//postman.setGlobalVariable(\"swingSensorChanged\", jsonData.id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"serialNo\":\"{{swingSensorChangedIMEI}}\",\n  \"vendor\": \"bbb\",\n  \"type\": \"OBD\",\n  \"credentialsId\":\"{{swingSensorChangedTOKEN}}\",\n  \"additionalInfo\":{\n    \"extra\":\"infoTest\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "attach sensor to vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ed8f8c28-cd5b-4b4f-85a6-d821ee1d8139",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : \"string\" },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(tv4);",
+									"",
+									"",
+									"pm.test(\"Valid vehicle Id\", function () {",
+									"    pm.expect(jsonData.vehicleId.id).to.not.equal(\"13814000-1dd2-11b2-8080-808080808080\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{swingSensorOrigin}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{swingSensorOrigin}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "create director",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0f5818ce-8b46-4977-a428-0282dc096160",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        },",
+									"        \"phoneNo\":{",
+									"            \"type\": \"string\",",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        },",
+									"        \"email\":{",
+									"            \"type\": \"string\",",
+									"            \"pattern\":/^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}$/i",
+									"        },",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"name\" : { \"type\" : \"string\" },",
+									"        \"authority\" : { \"type\" : \"string\" , \"enum\" : [ \"DIRECTOR\",\"DRIVER\",\"COMPANY_ADMIN\",\"SYSTEM_ADMIN\" ]},",
+									"        \"phone\" : { \"$ref\": \"#/definitions/phoneNo\" },",
+									"        \"email\" : { \"$ref\": \"#/definitions/email\"  },",
+									"        \"passwordUpdatedTime\" : { \"type\" : \"integer\" },",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"tests[\"Valid scehma\"] = tv4.validate(jsonData, schema);",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"console.log(tv4);",
+									"",
+									"postman.setEnvironmentVariable(\"directorId\", jsonData.id.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"swingtestDirector1\",\n  \"email\": \"director1@swingtest.com\",\n  \"phone\": \"010-3455-9842\",\n  \"password\": \"test1234\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/director",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"director"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "assign vehicle to director",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c8338edb-0271-4d04-b757-1d8beae1f5bd",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"category\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"usage\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"displacement\" : { \"type\" : [\"integer\",\"null\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"pm.test(\"Valid director Id\", function () {",
+									"    pm.expect(jsonData.directorId.id).to.not.equal(\"13814000-1dd2-11b2-8080-808080808080\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/director/{{directorId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"director",
+								"{{directorId}}"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Valid - 디렉터 소유 차량 확인",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8c005441-a55f-4ee1-b032-8354343ca815",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var vehicleId = pm.environment.get(\"vehicleId\");",
+									"",
+									"pm.test(\"Vehicle shall be identical after change device\", function () {",
+									"    pm.expect(jsonData.data[0].id.id).to.equal(vehicleId);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/director/{{directorId}}/vehicles?limit=10",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"director",
+								"{{directorId}}",
+								"vehicles"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10",
+									"equals": true
+								}
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "개통요청",
+			"description": "",
+			"item": [
+				{
+					"name": "Invalid - 컴퍼니 Owner로 변경",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a1f260d7-cb3f-4fcf-b96a-1e7fad11a1c5",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"test@swingtest.com\",\"password\":\"test1234\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid - 개통 요청",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bbf2ce9f-0795-4108-8739-1b4571996093",
+								"type": "text/javascript",
+								"exec": [
+									"// Invalid Test",
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"imei\":\"{{swingSensorOriginIMEI}}\",\n \"mdn\":\"01262341234\",\n \"imsi\":\"450109952411234\",\n \"iccid\":\"8982050809562705771F\",\n \"subscription\":\"aaaa\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1_2/swing",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1_2",
+								"swing"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "SF 관리자로 권한 변경",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "542d5c96-ff63-46ac-ae55-0c681e90d3cc",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin@smartfleet.sktelecom.com\",\"password\":\"smart2017.123$\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Valid - 개통 요청",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "be44460f-3cab-47ff-a72b-77f7918f7408",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"pm.test(\"Valid nwStatus\", function () {",
+									"    pm.expect(jsonData.nwStatus).to.equal(\"01\");",
+									"});",
+									"",
+									"pm.test(\"Valid mdn\", function () {",
+									"    pm.expect(jsonData.mdn).to.equal(\"01262341234\");",
+									"});",
+									"",
+									"pm.test(\"Valid imsi\", function () {",
+									"    pm.expect(jsonData.additionalInfo.imsi).to.equal(\"450109952411234\");",
+									"});",
+									"",
+									"pm.test(\"Valid iccid\", function () {",
+									"    pm.expect(jsonData.additionalInfo.iccid).to.equal(\"8982050809562705771F\");",
+									"});",
+									"",
+									"pm.test(\"Valid subscription\", function () {",
+									"    pm.expect(jsonData.additionalInfo.subscription).to.equal(\"aaaa\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"imei\":\"{{swingSensorOriginIMEI}}\",\n \"mdn\":\"01262341234\",\n \"imsi\":\"450109952411234\",\n \"iccid\":\"8982050809562705771F\",\n \"subscription\":\"aaaa\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1_2/swing",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1_2",
+								"swing"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "기변요청",
+			"description": "",
+			"item": [
+				{
+					"name": "SF 관리자로 권한 변경",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "542d5c96-ff63-46ac-ae55-0c681e90d3cc",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin@smartfleet.sktelecom.com\",\"password\":\"smart2017.123$\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Valid - 기기 변경 요청",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e795be26-36e5-40f2-a72e-b371478df741",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"pm.test(\"Valid nwStatus\", function () {",
+									"    pm.expect(jsonData.nwStatus).to.equal(\"01\");",
+									"});",
+									"",
+									"pm.test(\"Valid mdn\", function () {",
+									"    pm.expect(jsonData.mdn).to.equal(\"01262341234\");",
+									"});",
+									"",
+									"pm.test(\"Valid imsi\", function () {",
+									"    pm.expect(jsonData.additionalInfo.imsi).to.equal(\"99239458512391\");",
+									"});",
+									"",
+									"pm.test(\"Valid iccid\", function () {",
+									"    pm.expect(jsonData.additionalInfo.iccid).to.equal(\"1982052362121205771F\");",
+									"});",
+									"",
+									"pm.test(\"Valid subscription\", function () {",
+									"    pm.expect(jsonData.additionalInfo.subscription).to.equal(\"aaaa\");",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"imei\":\"{{swingSensorOriginIMEI}}\",\n \"newImei\":\"{{swingSensorChangedIMEI}}\",\n \"newIccid\":\"1982052362121205771F\",\n \"newImsi\":\"99239458512391\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1_2/swing/changeDevice",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1_2",
+								"swing",
+								"changeDevice"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "컴퍼니 Owner로 변경",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc3fdf08-970e-4b96-8949-57278012b2fd",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"test@swingtest.com\",\"password\":\"test1234\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "InValid - 수정하기 전 기존 단말 초기화 여부 확인",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2167e4b5-a11f-49db-8a0f-e1e6e4a1a259",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"credentialsId\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"pm.test(\"reset vehicleId\", function () {",
+									"    pm.expect(jsonData.vehicleId.id).to.equal(\"13814000-1dd2-11b2-8080-808080808080\");",
+									"});",
+									"",
+									"pm.test(\"reset directorId\", function () {",
+									"    pm.expect(jsonData.directorId.id).to.equal(\"13814000-1dd2-11b2-8080-808080808080\");",
+									"});",
+									"",
+									"pm.test(\"reset mdn\", function () {",
+									"    pm.expect(jsonData.mdn).to.equal(null);",
+									"});",
+									"",
+									"pm.test(\"reset nwStatus\", function () {",
+									"    pm.expect(jsonData.nwStatus).to.equal(null);",
+									"});",
+									"",
+									"pm.test(\"reset iccid\", function () {",
+									"    pm.expect(jsonData.additionalInfo.iccid).to.equal(undefined);",
+									"});",
+									"",
+									"pm.test(\"reset imsi\", function () {",
+									"    pm.expect(jsonData.additionalInfo.imsi).to.equal(undefined);",
+									"});",
+									"",
+									"pm.test(\"reset subscription\", function () {",
+									"    pm.expect(jsonData.additionalInfo.iccid).to.equal(undefined);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor?serialNo={{swingSensorOriginIMEI}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor"
+							],
+							"query": [
+								{
+									"key": "serialNo",
+									"value": "{{swingSensorOriginIMEI}}",
+									"equals": true
+								}
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Valid - 기기 변경 단말에 기존  등록 차량/디렉터 이전 여부 확인",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "05d04b26-eab3-4a0f-a565-712a8155bd97",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var vehicleId = pm.environment.get(\"vehicleId\");",
+									"",
+									"pm.test(\"Vehicle shall be identical after change device\", function () {",
+									"    pm.expect(jsonData.vehicleId.id).to.equal(vehicleId);",
+									"});",
+									"",
+									"var directorId = pm.environment.get(\"directorId\");",
+									"",
+									"pm.test(\"Director shall be identical after change device\", function () {",
+									"    pm.expect(jsonData.directorId.id).to.equal(directorId);",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{swingSensorChanged}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{swingSensorChanged}}"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Valid - 기기 변경 후에도 신규 변경된 단말이 이전되었는지 확인",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5ffe6207-25b1-461d-ad0e-8ced2c4aa83a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"var vehicleId = pm.environment.get(\"vehicleId\");",
+									"",
+									"pm.test(\"Vehicle shall be identical after change device\", function () {",
+									"    pm.expect(jsonData.data[0].id.id).to.equal(vehicleId);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/director/{{directorId}}/vehicles?limit=10",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"director",
+								"{{directorId}}",
+								"vehicles"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10",
+									"equals": true
+								}
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "번호변경",
+			"description": "",
+			"item": [
+				{
+					"name": "SF 관리자로 권한 변경",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a91e876c-fb41-430d-bdbd-14f633f2bfa6",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"postman.setEnvironmentVariable(\"swingMDNChanged\",\"11236321234\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin@smartfleet.sktelecom.com\",\"password\":\"smart2017.123$\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Valid - 번호 변경",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ed0e0ee1-6f6c-483a-871b-07a5feb42b0d",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"var swingMDNChanged = pm.environment.get(\"swingMDNChanged\");",
+									"",
+									"pm.test(\"Valid mdn\", function () {",
+									"    pm.expect(jsonData.mdn).to.equal(swingMDNChanged);",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"imei\":\"{{swingSensorChangedIMEI}}\",\n \"newMdn\":\"{{swingMDNChanged}}\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1_2/swing/changeMdn",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1_2",
+								"swing",
+								"changeMdn"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "컴퍼니 Owner로 변경",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc3fdf08-970e-4b96-8949-57278012b2fd",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"test@swingtest.com\",\"password\":\"test1234\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Valid - 번호 변경 확인",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bc08a5b4-a484-4a19-8f70-ce8a662423fc",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"var swingMDNChanged = pm.environment.get(\"swingMDNChanged\");",
+									"pm.test(\"mdn shall be applied\", function () {",
+									"    pm.expect(jsonData.mdn).to.equal(swingMDNChanged);",
+									"});",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{swingSensorChanged}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{swingSensorChanged}}"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "카드변경",
+			"description": "",
+			"item": [
+				{
+					"name": "SF 관리자로 권한 변경",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2027fe69-e7bf-4217-8765-e9613ac22b93",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"postman.setEnvironmentVariable(\"swingMDNChanged\",\"11242562589\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin@smartfleet.sktelecom.com\",\"password\":\"smart2017.123$\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Valid - 카드 변경",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6bc549cc-8958-4aea-8ddc-91f96a1c9fde",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"pm.test(\"Valid iccid\", function () {",
+									"    pm.expect(jsonData.additionalInfo.iccid).to.equal(\"7777050236221205771F\");",
+									"});",
+									"",
+									"pm.test(\"Valid imsi\", function () {",
+									"    pm.expect(jsonData.additionalInfo.imsi).to.equal(\"09239236312391\");",
+									"});",
+									"",
+									"postman.setEnvironmentVariable(\"iccidChanged\", jsonData.additionalInfo.iccid);",
+									"postman.setEnvironmentVariable(\"imsiChanged\", jsonData.additionalInfo.imsi);",
+									"",
+									"postman.setEnvironmentVariable(\"nwStatusInput\",\"05\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"imei\":\"{{swingSensorChangedIMEI}}\",\n \"newIccid\":\"7777050236221205771F\",\n \"newImsi\":\"09239236312391\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1_2/swing/changeIccid",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1_2",
+								"swing",
+								"changeIccid"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "컴퍼니 Owner로 변경",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6d558e06-8d96-445e-bf18-b99d7423df71",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"test@swingtest.com\",\"password\":\"test1234\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Valid - 카드 변경",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "07fafe88-b2ce-490c-aa49-c13d732d02f5",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"var iccidChanged = pm.environment.get(\"iccidChanged\");",
+									"var imsiChanged = pm.environment.get(\"imsiChanged\");",
+									"var nwStatusChanged = pm.environment.get(\"nwStatusChanged\");",
+									"",
+									"pm.test(\"iccid shall be applied\", function () {",
+									"    pm.expect(jsonData.additionalInfo.iccid).to.equal(iccidChanged);",
+									"});",
+									"",
+									"pm.test(\"imsi shall be applied\", function () {",
+									"    pm.expect(jsonData.additionalInfo.imsi).to.equal(imsiChanged);",
+									"});",
+									"",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{swingSensorChanged}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{swingSensorChanged}}"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "상태변경",
+			"description": "",
+			"item": [
+				{
+					"name": "SF 관리자로 권한 변경",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1b8bd89e-160f-41d2-82fd-a824773ced07",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"postman.setEnvironmentVariable(\"swingMDNChanged\",\"34653331234\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin@smartfleet.sktelecom.com\",\"password\":\"smart2017.123$\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Valid - 상태 변경 (정지 관련)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5b4794a1-306b-4a9c-b67d-12b597d10c02",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"postman.setEnvironmentVariable(\"nwStatusChanged\", jsonData.nwStatus);",
+									"",
+									"var nwStatus = pm.environment.get(\"nwStatusChanged\");",
+									"",
+									"pm.test(\"nwStatus shall be applied based on the input: \" + nwStatus, function () {",
+									"    pm.expect(jsonData.nwStatus).to.equal(nwStatus);",
+									"});",
+									"",
+									"tests[\"nwStatus shall be applied based on the input : \" + nwStatus] = jsonData.nwStatus == nwStatus;"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c45c3b66-3bca-485e-b6ff-26e608579908",
+								"type": "text/javascript",
+								"exec": [
+									"function getRandomInt(min, max) {",
+									"        min = Math.ceil(min);",
+									"        max = Math.floor(max);",
+									"        return Math.floor(Math.random() * (max - min)) + min;",
+									"}",
+									"",
+									"var nwStatus = [ \"02\", \"03\", \"04\", \"05\", \"06\", \"99\" ];",
+									"",
+									"postman.setGlobalVariable(\"nwStatusInput\", nwStatus[getRandomInt(0,5)]);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"imei\":\"{{swingSensorChangedIMEI}}\",\n \"nwStatus\":\"{{nwStatusInput}}\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1_2/swing/changeStatus",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1_2",
+								"swing",
+								"changeStatus"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "컴퍼니 Owner로 변경",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6d558e06-8d96-445e-bf18-b99d7423df71",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"test@swingtest.com\",\"password\":\"test1234\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Valid - nwStatus 변경 확인",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "93c08497-965e-4437-b87d-a33eb4732740",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"var iccidChanged = pm.environment.get(\"iccidChanged\");",
+									"var imsiChanged = pm.environment.get(\"imsiChanged\");",
+									"var nwStatusChanged = pm.environment.get(\"nwStatusChanged\");",
+									"",
+									"pm.test(\"nwStats shall be applied\", function () {",
+									"    pm.expect(jsonData.nwStatus).to.equal(nwStatusChanged);",
+									"});",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{swingSensorChanged}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{swingSensorChanged}}"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "요금제변경",
+			"description": "",
+			"item": [
+				{
+					"name": "SF 관리자로 권한 변경",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1cd6cb23-57bc-40fa-b804-e723d3506369",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin@smartfleet.sktelecom.com\",\"password\":\"smart2017.123$\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Valid - 요금제 변경",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4fd956a7-4804-4b51-a702-36dc473aaa9a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"pm.test(\"Valid subscription\", function () {",
+									"    pm.expect(jsonData.additionalInfo.subscription).to.equal(\"NA3465XXXY\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"imei\":\"{{swingSensorChangedIMEI}}\",\n \"subscription\":\"NA3465XXXY\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1_2/swing/changeSubscription",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1_2",
+								"swing",
+								"changeSubscription"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "해지요청",
+			"description": "",
+			"item": [
+				{
+					"name": "SF 관리자로 권한 변경",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1cd6cb23-57bc-40fa-b804-e723d3506369",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin@smartfleet.sktelecom.com\",\"password\":\"smart2017.123$\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Valid - 해지",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "510e8b68-93ef-4d9d-9029-694621c8e605",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"credentialsId\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"imei\":\"{{swingSensorChangedIMEI}}\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1_2/swing",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1_2",
+								"swing"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "login (master admin) copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "61a70c29-58e2-4619-aaba-2ec16df6a5c9",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"test@swingtest.com\",\"password\":\"test1234\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "해지 단말 초기화 확인",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3af1973e-d94e-4116-8e34-f6b66ab305a6",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"credentialsId\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"pm.test(\"reset vehicleId\", function () {",
+									"    pm.expect(jsonData.vehicleId.id).to.equal(\"13814000-1dd2-11b2-8080-808080808080\");",
+									"});",
+									"",
+									"pm.test(\"reset directorId\", function () {",
+									"    pm.expect(jsonData.directorId.id).to.equal(\"13814000-1dd2-11b2-8080-808080808080\");",
+									"});",
+									"",
+									"pm.test(\"reset mdn\", function () {",
+									"    pm.expect(jsonData.mdn).to.equal(null);",
+									"});",
+									"",
+									"pm.test(\"reset nwStatus\", function () {",
+									"    pm.expect(jsonData.nwStatus).to.equal(null);",
+									"});",
+									"",
+									"pm.test(\"reset iccid\", function () {",
+									"    pm.expect(jsonData.additionalInfo.iccid).to.equal(undefined);",
+									"});",
+									"",
+									"pm.test(\"reset imsi\", function () {",
+									"    pm.expect(jsonData.additionalInfo.imsi).to.equal(undefined);",
+									"});",
+									"",
+									"pm.test(\"reset subscription\", function () {",
+									"    pm.expect(jsonData.additionalInfo.iccid).to.equal(undefined);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor?serialNo={{swingSensorChangedIMEI}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor"
+							],
+							"query": [
+								{
+									"key": "serialNo",
+									"value": "{{swingSensorChangedIMEI}}",
+									"equals": true
+								}
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid - 생성된 디렉터 조회",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "165f89c0-6003-40f7-982c-f0cb8e9045b5",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 404\", function(){",
+									"    pm.response.to.have.status(404);    ",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/director/{{directorId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"director",
+								"{{directorId}}"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid - 생성된 차량 조회",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9c14588d-d38e-41c3-89b8-7e138c76b3ba",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 404\", function(){",
+									"    pm.response.to.have.status(404);    ",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cleanup",
+			"description": "",
+			"item": [
+				{
+					"name": "login (sysadmin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a616d808-5ca5-47d2-aee9-6947e7a330cf",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin@smartfleet.sktelecom.com\",\"password\":\"smart2017.123$\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "회사 삭제 copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "029b9baa-abf1-4949-be06-89c78549b759",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "0f147629-5e54-4bd1-9977-567f15ec416c",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "24f96609-bcd6-4635-84f7-0377db4bc2bf",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

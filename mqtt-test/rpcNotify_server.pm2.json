@@ -1,0 +1,18 @@
+{
+  "apps" : [
+    {
+      "name":"rpcNotifyServer",
+      "script": "./rpcNotify_server.js",
+      "watch" : false,
+      "exec_mode": "cluster",
+      "instances": "max",
+      "env" : {
+        "NODE_ENV": "production"
+      },
+      "log_date_format" : "YYYY-MM-DD HH:mm Z",
+      "error_file": "/home/tapp/HOME/log/smartfleet/rpcNotify_server_err.log",
+      "out_file"  : "/home/tapp/HOME/log/smartfleet/rpcNotify_server_out.log",
+      "merge_logs" : true
+    }
+  ]
+}

@@ -1,0 +1,2163 @@
+{
+	"info": {
+		"name": "TEST-V1_0-Director_Vehicle_Driver",
+		"_postman_id": "1852d7fb-4faf-ef19-6db2-346822586626",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Master Company 생성",
+			"description": "",
+			"item": [
+				{
+					"name": "login (sysadmin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin@smartfleet.sktelecom.com\",\"password\":\"smart2017.123$\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "create a company",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"companyId\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"companyId\", jsonData.id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"pc1\",\n  \"serviceType\":\"pccc\", \n  \"picName\":\"pccc\", \n  \"picEmail\":\"pccc@test.com\", \n  \"picPhone\":\"010-3033-3321\",\n  \"picPasswd\":\"test1234\",\n  \"picDivision\":\"사업1팀\",\n  \"sktManagerName\":\"manager1\",\n  \"sktManagerEmail\":\"xyz@xxx.com\",\n  \"cooperationTask\":\"수리\",\n  \"description\":\"additional description\",\n  \"notifyHost\":\"http://52.78.204.231:8888/\",\n  \"notifyMsgType\":\"0f\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "login (master admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f4733fc9-3c16-4f62-ace5-01fd02c3db32",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"pccc@test.com\",\"password\":\"test1234\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "디렉터 및 차량 생성 (중복생성 포함)",
+			"description": "",
+			"item": [
+				{
+					"name": "디렉터1 생성",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b2b2cf3e-540a-479c-9620-6a3debbe89a0",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        },",
+									"        \"phoneNo\":{",
+									"            \"type\": \"string\",",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        },",
+									"        \"email\":{",
+									"            \"type\": \"string\",",
+									"            \"pattern\":/^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}$/i",
+									"        },",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"name\" : { \"type\" : \"string\" },",
+									"        \"authority\" : { \"type\" : \"string\" , \"enum\" : [ \"DIRECTOR\",\"DRIVER\",\"COMPANY_ADMIN\",\"SYSTEM_ADMIN\" ]},",
+									"        \"phone\" : { \"$ref\": \"#/definitions/phoneNo\" },",
+									"        \"email\" : { \"$ref\": \"#/definitions/email\"  },",
+									"        \"passwordUpdatedTime\" : { \"type\" : \"integer\" },",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"",
+									"tests[\"Valid scehma\"] = tv4.validate(jsonData, schema);",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"postman.setEnvironmentVariable(\"directorId\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"directorId\", jsonData.id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"디렉터1\",\n  \"email\": \"director1@test1.com\",\n  \"phone\": \"010-3033-0003\",\n  \"password\": \"test123\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/director",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"director"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "디렉터1 생성 재시도 (500)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "34f7f458-ce20-4508-bd7c-b238d61e9278",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 500(DUP) OK\"] = responseCode.code === 500;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"디렉터1\",\n  \"email\": \"director1@test1.com\",\n  \"phone\": \"010-3033-0003\",\n  \"password\": \"test123\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/director",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"director"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "디렉터2 생성",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cca9ba64-ac31-4355-9c9d-b699dc733f04",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"directorId2\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"directorId2\", jsonData.id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"디렉터2\",\n  \"email\": \"director2@test1.com\",\n  \"phone\": \"010-3033-0004\",\n  \"password\": \"test123\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/director",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"director"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "차량1 생성",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fb20f3e4-131e-4d36-91a0-1c52751e28c1",
+								"type": "text/javascript",
+								"exec": [
+									"//tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"category\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"usage\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"displacement\" : { \"type\" : [\"integer\",\"null\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"postman.setEnvironmentVariable(\"vehicleId\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"vehicleId\", jsonData.id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehicleNo\": \"22가3303\",\n  \"modelName\": \"그랜져\",\n  \"modelCode\": \"HG001\",\n  \"vendor\": \"현대\",\n  \"modelYear\" : \"2017\",\n  \"missionType\" : \"AUTO\",\n  \"fuelType\" : \"DIESEL\",\n  \"mileage\" : 11100,\n  \"category\" : \"ETC\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "차량2 생성",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "db87102a-6a7b-4807-92ce-8c870b47fbcb",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"vehicleId2\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"vehicleId2\", jsonData.id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehicleNo\": \"23가3304\",\n  \"modelName\": \"그랜져\",\n  \"modelCode\": \"HG001\",\n  \"vendor\": \"현대\",\n  \"modelYear\" : \"2017\",\n  \"missionType\" : \"AUTO\",\n  \"fuelType\" : \"DIESEL\",\n  \"mileage\" : 11100,\n  \"category\" : \"ETC\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "차량2 생성 재시도 (500)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c655d54b-33f5-4a46-8a06-6c47b9b5e892",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 500(DUP) OK\"] = responseCode.code === 500;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehicleNo\": \"23가3304\",\n  \"modelName\": \"그랜져\",\n  \"modelCode\": \"HG001\",\n  \"vendor\": \"현대\",\n  \"modelYear\" : \"2017\",\n  \"missionType\" : \"AUTO\",\n  \"fuelType\" : \"DIESEL\",\n  \"mileage\" : 11100,\n  \"category\" : \"ETC\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "디렉터차량할당(미존재ID할당 포함)",
+			"description": "",
+			"item": [
+				{
+					"name": "디렉터에 차량 할당 : 없는 디렉터ID (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8c1b996d-3f91-484e-9791-df0e15cadefd",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 404 OK\"] = responseCode.code === 404;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/director/d51c6830-0d77-11e8-89ec-35b60720f5cf",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"director",
+								"d51c6830-0d77-11e8-89ec-35b60720f5cf"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "디렉터에 차량 할당 : 없는 차량ID (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "92c71c08-4a9d-489f-8e47-cdcf3a38e188",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 404 OK\"] = responseCode.code === 404;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/d53c5830-0d66-11e8-89ec-35b60720f5cf/director/{{directorId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"d53c5830-0d66-11e8-89ec-35b60720f5cf",
+								"director",
+								"{{directorId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "디렉터1에 차량1 할당",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0c8c8b6b-7b67-45f4-96d7-effbc62384ed",
+								"type": "text/javascript",
+								"exec": [
+									"//tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"category\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"usage\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"displacement\" : { \"type\" : [\"integer\",\"null\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/director/{{directorId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"director",
+								"{{directorId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "디렉터2에 차량1 할당",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6d089087-9bdf-44d4-8ba4-00f0d981e488",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"차량1 디렉터2 변경\"] = jsonData.directorId.id === globals.directorId2;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/director/{{directorId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"director",
+								"{{directorId2}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "차량1 정보조회 (디렉터2 확인)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3709589d-49bc-416c-9226-c4377292058c",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"차량1 디렉터2 변경\"] = jsonData.directorId.id === globals.directorId2;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "디렉터1에 차량1 할당",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fb3ac2d1-5a06-466b-b485-59848cae5e12",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/director/{{directorId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"director",
+								"{{directorId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "차량1 정보조회 (디렉터1 확인)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "56d0aed6-6e77-4d8e-81ab-d2e5afa879c1",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"차량1 디렉터1 변경\"] = jsonData.directorId.id === globals.directorId;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "드라이버생성",
+			"description": "",
+			"item": [
+				{
+					"name": "드라이버1 생성",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a5fd169d-93c3-4ff2-914a-56821d9dc559",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"driverId\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"driverId\", jsonData.id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"Driver1\",\n  \"email\": \"driver1@test.com\",\n  \"phone\": \"010-3303-0006\",\n  \"password\": \"abcd\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/driver",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"driver"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "드라이버2 생성",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "88bdf3d6-dc14-44c9-a751-20b4afbc6895",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"driverId2\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"driverId2\", jsonData.id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"Driver2\",\n  \"email\": \"driver2@test.com\",\n  \"phone\": \"010-3303-0007\",\n  \"password\": \"abcd\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/driver",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"driver"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "드라이버 할당 및 해제(할당드라이버 재할당포함)",
+			"description": "",
+			"item": [
+				{
+					"name": "차량 활성화",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "400470ca-79a6-4497-9e2b-fafa88374d32",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"activate\": true}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/activate",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"activate"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "차량1에 드라이버1 할당",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fd6260c9-c5e1-4a2a-95ed-87a940ead5dc",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/driver/{{driverId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"driver",
+								"{{driverId}}"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "차량2에 드라이버1 할당 (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "73a8f2ae-f471-4dec-aacd-035bf7e8c98b",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 400 OK 이미 할당된 드라이버\"] = responseCode.code === 400;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId2}}/driver/{{driverId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId2}}",
+								"driver",
+								"{{driverId}}"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "차량2에 드라이버2 할당",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "516469f9-760c-45ba-894f-9d9a2b9704c9",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 400 OK 비활성화 차량\"] = responseCode.code === 400;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId2}}/driver/{{driverId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId2}}",
+								"driver",
+								"{{driverId2}}"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "차량1에 드라이버2 할당 (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "50faafbe-6a1f-49cc-bede-2510ce0a9a77",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 400 OK (EXIST)\"] = responseCode.code === 400;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/driver/{{driverId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"driver",
+								"{{driverId2}}"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "차량1에 드라이버1 할당 해제",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0a42cf16-a020-45fa-bcc0-b2f5095f39df",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/driver/{{driverId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"driver",
+								"{{driverId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "차량1에 드라이버2 할당",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "913f2b6e-72bd-4c5e-a35a-ccb6d47db15e",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/driver/{{driverId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"driver",
+								"{{driverId2}}"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "차량1에 드라이버1 할당 해제 (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "43d1debc-7a84-49b9-9c6b-7b1d2724cd2c",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 400 OK (Invalid)\"] = responseCode.code === 400;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/driver/{{driverId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"driver",
+								"{{driverId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "차량1에 드라이버2 할당 해제",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "268038ed-97a4-427e-95d2-cae5ceffaf1f",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/driver/{{driverId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"driver",
+								"{{driverId2}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "차량정보수정 & 비활성화 & 삭제 (차량중복삭제포함)",
+			"description": "",
+			"item": [
+				{
+					"name": "차량 수정",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "afeb6563-9572-4bf8-a660-ac04ed890d64",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"2017->2018 변경\"] = jsonData.modelYear == 2018;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehicleNo\": \"22가3303\",\n  \"modelName\": \"그랜져\",\n  \"modelCode\": \"HG001\",\n  \"vendor\": \"현대\",\n  \"modelYear\" : \"2018\",\n  \"missionType\" : \"AUTO\",\n  \"fuelType\" : \"DIESEL\",\n  \"mileage\" : 12300,\n  \"category\" : \"ETC\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "차량 비활성화",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "400470ca-79a6-4497-9e2b-fafa88374d32",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"activate\": false}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/activate",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"activate"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "차량1 삭제",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d81626c2-f5ef-4d4f-9ca9-bc3e3860da56",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "차량2 삭제",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d81626c2-f5ef-4d4f-9ca9-bc3e3860da56",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId2}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "차량1 중복 삭제 (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c0857662-7c20-471c-ab91-8ed13404b1a1",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 404 OK Not Found\"] = responseCode.code === 404;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "드라이버1 삭제",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/driver/{{driverId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"driver",
+								"{{driverId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "드라이버2 삭제",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/driver/{{driverId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"driver",
+								"{{driverId2}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "드라이버2 중복 삭제 (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7be8fad0-5b2c-40f5-be01-6cbffdafce03",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 404 OK Not Found\"] = responseCode.code === 404;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/driver/{{driverId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"driver",
+								"{{driverId2}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "디렉터삭제(중복삭제포함)",
+			"description": "",
+			"item": [
+				{
+					"name": "디렉터1 삭제",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/director/{{directorId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"director",
+								"{{directorId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "디렉터2 삭제",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/director/{{directorId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"director",
+								"{{directorId2}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "디렉터2 중복 삭제 (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "81f0a4ee-f30c-41b7-a628-f3600e3b0819",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 404 OK Not Found\"] = responseCode.code === 404;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/director/{{directorId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"director",
+								"{{directorId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Master Company 삭제",
+			"description": "",
+			"item": [
+				{
+					"name": "login (sysadmin) copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin@smartfleet.sktelecom.com\",\"password\":\"smart2017.123$\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "master company 정보조회",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bf640893-1e73-43f2-a2db-e5be643c05b7",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"companyId\", jsonData.data[0].id.id);",
+									"postman.setGlobalVariable(\"companyId\", jsonData.data[0].id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/companies?serviceType=pccc&limit=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"companies"
+							],
+							"query": [
+								{
+									"key": "serviceType",
+									"value": "pccc",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "delete master company",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ed09e391-e93b-4aed-b5ab-40149f656ed6",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

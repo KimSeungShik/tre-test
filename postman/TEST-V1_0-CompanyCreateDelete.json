@@ -1,0 +1,1110 @@
+{
+	"info": {
+		"name": "TEST-V1_0-Company_Create_Delete",
+		"_postman_id": "65b7d550-ef09-a5b6-8af6-c8e42fd122d4",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Master Company 생성",
+			"description": "",
+			"item": [
+				{
+					"name": "login (sysadmin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin@smartfleet.sktelecom.com\",\"password\":\"smart2017.123$\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "create a master company",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0fd56ccb-5474-4d78-999e-eb99aa380c8d",
+								"type": "text/javascript",
+								"exec": [
+									"//tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"companyId\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"companyId\", jsonData.id.id);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        },",
+									"        \"phoneNo\":{",
+									"            \"type\": \"string\",",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        },",
+									"        \"email\":{",
+									"            \"type\": \"string\",",
+									"            \"pattern\":/^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}$/i",
+									"        },",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"number\" },",
+									"        \"name\": {\"type\":\"string\"},",
+									"        \"serviceType\": {\"type\":\"string\"},",
+									"        \"master\":{\"type\":\"boolean\"},",
+									"        \"masterId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"picPasswd\":{\"type\":\"string\"},",
+									"        \"picName\" : { \"type\" : \"string\" },",
+									"        \"picPhone\" : { \"$ref\": \"#/definitions/phoneNo\" },",
+									"        \"picEmail\" :  { \"$ref\": \"#/definitions/email\" },",
+									"        \"picDivision\":{\"type\":[\"string\", \"null\"]},",
+									"        \"sktManagerName\":{\"type\":[\"string\", \"null\"]},",
+									"        \"sktManagerEmail\":{ \"$ref\": \"#/definitions/email\" },",
+									"        \"cooperationTask\":{\"type\":[\"string\", \"null\"]},",
+									"        \"description\":{\"type\":[\"string\", \"null\"]},",
+									"        \"notifyHost\":{",
+									"            \"type\":[\"string\", \"null\"],",
+									"            \"pattern\": /^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$/",
+									"        },",
+									"        \"notifyMsgType\":{\"type\":[\"string\", \"null\"]},",
+									"        \"notifyErrIdleMin\":{\"type\":\"number\"},",
+									"        \"pwAccess\":{\"type\":[\"boolean\", \"null\"]},",
+									"        \"dataAnalytics\":{\"type\":[\"string\", \"null\"]}",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"",
+									"console.log(\"Validation failed: \", tv4.error);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"postman1\",\n  \"serviceType\":\"pccc\", \n  \"picName\":\"pccc\", \n  \"picEmail\":\"pccc@test.com\", \n  \"picPhone\":\"010-3303-3321\",\n  \"picPasswd\":\"test1234\",\n  \"picDivision\":\"사업1팀\",\n  \"sktManagerName\":\"manager1\",\n  \"sktManagerEmail\":\"xyz@xxx.com\",\n  \"cooperationTask\":\"수리\",\n  \"description\":\"additional description\",\n  \"notifyHost\":\"http://52.78.204.231:8888/\",\n  \"notifyMsgType\":\"0f\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "협력사 생성 및 삭제",
+			"description": "",
+			"item": [
+				{
+					"name": "login (master admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f4733fc9-3c16-4f62-ace5-01fd02c3db32",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"pccc@test.com\",\"password\":\"test1234\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "create a company-1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9675513e-b4d9-4144-8083-7c99b6e0578b",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"/* setTimeout(delayCompanyIdSet, 1000);",
+									"",
+									"function delayCompanyIdSet() {",
+									"    postman.setEnvironmentVariable(\"companyId\", jsonData.id.id);",
+									"    postman.setGlobalVariable(\"companyId\", jsonData.id.id);",
+									"}",
+									"*/",
+									"postman.setEnvironmentVariable(\"companyId\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"companyId\", jsonData.id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"pd1\",\n  \"serviceType\":\"pccc\", \n  \"picName\":\"pddd\", \n  \"picEmail\":\"pddd@test.com\", \n  \"picPhone\":\"010-3303-2222\",\n  \"picPasswd\":\"test1234\",\n  \"picDivision\":\"사업1팀\",\n  \"sktManagerName\":\"manager1\",\n  \"sktManagerEmail\":\"xyz@xxx.com\",\n  \"cooperationTask\":\"수리\",\n  \"description\":\"additional description\",\n  \"notifyHost\":\"http://52.78.204.231:8888/\",\n  \"notifyMsgType\":\"0f\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "put a company-1 (권한없는 협력사 수정 403)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4f1e598d-081a-4cdb-ba01-c28ca47cbab1",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 403 OK\"] = responseCode.code === 403;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"/* setTimeout(delayCompanyIdSet, 1000);",
+									"",
+									"function delayCompanyIdSet() {",
+									"    postman.setEnvironmentVariable(\"companyId\", jsonData.id.id);",
+									"    postman.setGlobalVariable(\"companyId\", jsonData.id.id);",
+									"}",
+									"*/"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"pd1\",\n  \"serviceType\":\"pccc\", \n  \"picName\":\"pddd\", \n  \"picEmail\":\"pddd@test.com\", \n  \"picPhone\":\"010-3303-2222\",\n  \"picPasswd\":\"test1234\",\n  \"picDivision\":\"사업1팀\",\n  \"sktManagerName\":\"manager2\",\n  \"sktManagerEmail\":\"xyz@xxx.com\",\n  \"cooperationTask\":\"수리\",\n  \"description\":\"additional description\",\n  \"notifyHost\":\"http://52.78.204.231:8888/\",\n  \"notifyMsgType\":\"0f\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "create a company-1 재시도(500)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2a1e4bb2-0095-42ab-af47-117683934ff9",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 500 OK(DUP)\"] = responseCode.code === 500;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"/* setTimeout(delayCompanyIdSet, 1000);",
+									"",
+									"function delayCompanyIdSet() {",
+									"    postman.setEnvironmentVariable(\"companyId\", jsonData.id.id);",
+									"    postman.setGlobalVariable(\"companyId\", jsonData.id.id);",
+									"}",
+									"*/",
+									"//postman.setEnvironmentVariable(\"companyId\", jsonData.id.id);",
+									"//postman.setGlobalVariable(\"companyId\", jsonData.id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"pd1\",\n  \"serviceType\":\"pccc\", \n  \"picName\":\"pddd\", \n  \"picEmail\":\"pddd@test.com\", \n  \"picPhone\":\"010-3303-2222\",\n  \"picPasswd\":\"test1234\",\n  \"picDivision\":\"사업1팀\",\n  \"sktManagerName\":\"manager1\",\n  \"sktManagerEmail\":\"xyz@xxx.com\",\n  \"cooperationTask\":\"수리\",\n  \"description\":\"additional description\",\n  \"notifyHost\":\"http://52.78.204.231:8888/\",\n  \"notifyMsgType\":\"0f\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "delete a company-1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5455d983-10d9-4510-9cb5-ee3df7dbdbc2",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "create a company-2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "96ee06e0-7e87-4e51-804d-afa5cda30d12",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"/* setTimeout(delayCompanyIdSet, 1000);",
+									"",
+									"function delayCompanyIdSet() {",
+									"    postman.setEnvironmentVariable(\"companyId\", jsonData.id.id);",
+									"    postman.setGlobalVariable(\"companyId\", jsonData.id.id);",
+									"}",
+									"*/",
+									"postman.setEnvironmentVariable(\"companyId\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"companyId\", jsonData.id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"pf1\",\n  \"serviceType\":\"pccc\", \n  \"picName\":\"pfff\", \n  \"picEmail\":\"pfff@test.com\", \n  \"picPhone\":\"010-3033-5555\",\n  \"picPasswd\":\"test1234\",\n  \"picDivision\":\"사업1팀\",\n  \"sktManagerName\":\"manager1\",\n  \"sktManagerEmail\":\"xyz@xxx.com\",\n  \"cooperationTask\":\"수리\",\n  \"description\":\"additional description\",\n  \"notifyHost\":\"http://52.78.204.231:8888/\",\n  \"notifyMsgType\":\"0f\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "협력사 정보조회 및 수정",
+			"description": "",
+			"item": [
+				{
+					"name": "login (협력사-2)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f4733fc9-3c16-4f62-ace5-01fd02c3db32",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"pfff@test.com\",\"password\":\"test1234\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "my company 정보조회",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f8951042-8f03-4906-a93e-473c6b9adc1c",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"companyId\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"companyId\", jsonData.id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/me",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"me"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "put a company-2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5e84b6ea-438d-4c27-9949-7ceca5d89ce8",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"/* setTimeout(delayCompanyIdSet, 1000);",
+									"",
+									"function delayCompanyIdSet() {",
+									"    postman.setEnvironmentVariable(\"companyId\", jsonData.id.id);",
+									"    postman.setGlobalVariable(\"companyId\", jsonData.id.id);",
+									"}",
+									"*/",
+									"postman.setEnvironmentVariable(\"companyId\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"companyId\", jsonData.id.id);",
+									"",
+									"tests[\"manager1->manager2 변경\"] = jsonData.sktManagerName == \"manager2\";"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"picName\": \"pfff\",\n    \"picPhone\": \"010-3033-5555\",\n    \"picEmail\": \"pfff@test.com\",\n    \"picDivision\": \"사업2팀\",\n    \"sktManagerName\": \"manager2\",\n    \"sktManagerEmail\": \"xyz@xxx.com\",\n    \"cooperationTask\": \"교환\",\n    \"description\": \"additional description\",\n    \"notifyHost\": \"http://152.78.204.231:8888/\",\n    \"notifyMsgType\": \"0f\",\n    \"notifyErrIdleMin\": 0,\n    \"pwAccess\": true,\n    \"dataAnalytics\": null\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Company 중복 삭제",
+			"description": "",
+			"item": [
+				{
+					"name": "login (master admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f4733fc9-3c16-4f62-ace5-01fd02c3db32",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"pccc@test.com\",\"password\":\"test1234\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "delete a company-2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "62657131-1896-47da-93fe-04f195fbca8d",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "delete a company-2 재시도(404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "816e040f-8bc5-497a-ae97-5b7bf0569059",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 404 OK\"] = responseCode.code === 404;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "권한없이 Company 삭제",
+			"description": "",
+			"item": [
+				{
+					"name": "master company 정보조회",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bf640893-1e73-43f2-a2db-e5be643c05b7",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"companyId\", jsonData.data[0].id.id);",
+									"postman.setGlobalVariable(\"companyId\", jsonData.data[0].id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/companies?serviceType=pccc&limit=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"companies"
+							],
+							"query": [
+								{
+									"key": "serviceType",
+									"value": "pccc",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "MA계정으로 master company 삭제시도(403)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3e594f59-4536-4392-bab9-006819751994",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 403 OK\"] = responseCode.code === 403;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Master Company 삭제",
+			"description": "",
+			"item": [
+				{
+					"name": "login (sysadmin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin@smartfleet.sktelecom.com\",\"password\":\"smart2017.123$\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "master company 정보조회",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bf640893-1e73-43f2-a2db-e5be643c05b7",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"companyId\", jsonData.data[0].id.id);",
+									"postman.setGlobalVariable(\"companyId\", jsonData.data[0].id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/companies?serviceType=pccc&limit=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"companies"
+							],
+							"query": [
+								{
+									"key": "serviceType",
+									"value": "pccc",
+									"equals": true
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "delete master company",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ed09e391-e93b-4aed-b5ab-40149f656ed6",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

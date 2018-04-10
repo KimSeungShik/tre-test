@@ -1,0 +1,506 @@
+newman
+
+0-1. TEST-V1_0-주요 기능 (권한, 403 포함)
+
+❏ 0. CRU company (SA - sysadmin)
+↳ 0.1 login
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.21KB, 179ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 0.2 get my infomation
+  GET https://smartfleet.sktelecom.com:8080/api/auth/me [200 OK, 597B, 12ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+  ✓  Valid scehma
+
+↳ 0.3-1 create a company1 (MA1)
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/company [200 OK, 881B, 133ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 0.3-2 create a company - DUP Test
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/company [500 Internal Server Error, 400B, 12ms]
+  ✓  status code is 500
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 0.3-3 create a company2 (MA2)
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/company [200 OK, 880B, 171ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 0.4-1 get companies list
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/companies/all?limit=30 [200 OK, 4.35KB, 32ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+  ✓  Valid scehma
+
+↳ 0.4-2 get company by ID
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/company/a9a20d50-236c-11e8-9570-956d65b68a0a [200 OK, 871B, 12ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+  ✓  Valid scehma
+
+↳ 0.5 update a company (MA1)
+  PUT https://smartfleet.sktelecom.com:8080/api/tre/v1/company/a9a20d50-236c-11e8-9570-956d65b68a0a [200 OK, 890B, 14ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+  ✓  Valid scehma
+
+↳ 0.6-1 create a co-company1
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/company [200 OK, 867B, 143ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+  ✓  Valid scehma
+
+↳ 0.6-2 create a co-company2
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/company [200 OK, 865B, 132ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+  ✓  Valid scehma
+
+↳ 0.7-1 create a co-company1 - DUP Test
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/company [500 Internal Server Error, 400B, 16ms]
+  ✓  status code is 500
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 0.7-2 create a co-company2 - DUP Test
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/company [500 Internal Server Error, 400B, 44ms]
+  ✓  status code is 500
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 0.8-1 update a co-company1
+  PUT https://smartfleet.sktelecom.com:8080/api/tre/v1/company/ab06a660-236c-11e8-8391-833dc5b9c077 [200 OK, 875B, 42ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+  ✓  Valid scehma
+
+↳ 0.8-2 update a co-company2
+  PUT https://smartfleet.sktelecom.com:8080/api/tre/v1/company/ab4e84d3-236c-11e8-8391-833dc5b9c077 [200 OK, 877B, 16ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+  ✓  Valid scehma
+
+❏ 1. setup & create job (MA1 - Master Admin)
+↳ 1.1 login
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.24KB, 110ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 1.2 get my infomation
+  GET https://smartfleet.sktelecom.com:8080/api/auth/me [200 OK, 600B, 11ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+  ✓  Valid scehma
+
+↳ 1.3 create a director
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/director [200 OK, 599B, 137ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 1.4 create a vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle [200 OK, 882B, 13ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 1.5 create a driver
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/driver [200 OK, 598B, 198ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 1.6-1 create a OBD
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor [200 OK, 771B, 32ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 1.6-2 create a GPS
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor [200 OK, 771B, 27ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 1.6-3 create a ADAS
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor [200 OK, 774B, 27ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 1.6-4 create a BLACKBOX
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor [200 OK, 781B, 22ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+❏ 2. assign, activity & attach job (MA2) - 403
+↳ 2.1 login
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.24KB, 118ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 2.2 assign vehicle to director
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a/director/ace21d22-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 16ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 2.3 activity vehicle
+  PUT https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a/activate [403 Forbidden, 386B, 17ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 2.4-1 attach OBD to vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/adad8370-236c-11e8-9570-956d65b68a0a/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 13ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 2.4-2 attach GPS to vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ade953f0-236c-11e8-9570-956d65b68a0a/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 15ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 2.4-3 attach ADAS to vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ae1f09f1-236c-11e8-9570-956d65b68a0a/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 15ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 2.4-4 attach BLACKBOX to vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ae54bff0-236c-11e8-9570-956d65b68a0a/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 14ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 2.4 assign driver to vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a/driver/ad5e03e0-236c-11e8-9570-956d65b68a0a [400 Bad Request, 376B, 14ms]
+  ✓  status code is 400
+  ✓  Response time is acceptable
+
+❏ 3. assign, activity & attach job (MA1)
+↳ 3.1 assign vehicle to director
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a/director/ace21d22-236c-11e8-9570-956d65b68a0a [200 OK, 882B, 60ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Valid director Id
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 3.2 activity vehicle
+  PUT https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a/activate [200 OK, 880B, 16ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Valid director Id
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 3.3-1 attach OBD to vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/adad8370-236c-11e8-9570-956d65b68a0a/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [200 OK, 797B, 20ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Valid vehicle Id
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 3.3-2 attach GPS to vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ade953f0-236c-11e8-9570-956d65b68a0a/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [200 OK, 797B, 23ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Valid vehicle Id
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 3.3-3 attach ADAS to vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ae1f09f1-236c-11e8-9570-956d65b68a0a/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [200 OK, 800B, 20ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Valid vehicle Id
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 3.3-4 attach BLACKBOX to vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ae54bff0-236c-11e8-9570-956d65b68a0a/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [200 OK, 807B, 35ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Valid vehicle Id
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 3.4 assign driver to vehicle
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a/driver/ad5e03e0-236c-11e8-9570-956d65b68a0a [200 OK, 880B, 20ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+❏ 4. unassign, inactivity & detach job (MA2) - 403
+↳ 4.1 unassign driver to vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a/driver/ad5e03e0-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 19ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 4.2-1 detach OBD from vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/adad8370-236c-11e8-9570-956d65b68a0a/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 12ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 4.2-2 detach GPS from vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ade953f0-236c-11e8-9570-956d65b68a0a/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 12ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 4.2-3 detach ADAS from vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ae1f09f1-236c-11e8-9570-956d65b68a0a/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 12ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 4.2-4 detach BLACKBOX from vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ae54bff0-236c-11e8-9570-956d65b68a0a/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 12ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 4.3 inactivity a vehicle
+  PUT https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a/activate [403 Forbidden, 386B, 20ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 4.4 unassign vehicle to director
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a/director/ace21d22-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 17ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+❏ 5. unassign, inactivity & detach job (MA1)
+↳ 5.1 unassign driver to vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a/driver/ad5e03e0-236c-11e8-9570-956d65b68a0a [200 OK, 880B, 19ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 5.2-1 detach OBD from vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/adad8370-236c-11e8-9570-956d65b68a0a/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [200 OK, 759B, 23ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 5.2-2 detach GPS from vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ade953f0-236c-11e8-9570-956d65b68a0a/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [200 OK, 759B, 15ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 5.2-3 detach ADAS from vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ae1f09f1-236c-11e8-9570-956d65b68a0a/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [200 OK, 762B, 14ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 5.2-4 detach BLACKBOX from vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ae54bff0-236c-11e8-9570-956d65b68a0a/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [200 OK, 769B, 16ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 5.3 inactivity a vehicle
+  PUT https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a/activate [200 OK, 882B, 22ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Valid director Id
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 5.4 unassign vehicle to director
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a/director/ace21d22-236c-11e8-9570-956d65b68a0a [200 OK, 882B, 17ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+❏ 6. cleanup & delete job (MA2) - 403
+↳ 6.1 delete a director
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/director/ace21d22-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 12ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 6.2 delete a vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 16ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 6.3 delete a driver
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/driver/ad5e03e0-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 13ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 6.4-1 delete a OBD
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/adad8370-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 13ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 6.4-2 delete a GPS
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ade953f0-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 12ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 6.4-3 delete a ADAS
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ae1f09f1-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 12ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 6.4-4 delete a BLACKBOX
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ae54bff0-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 12ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+❏ 7. cleanup & delete job (MA1)
+↳ 7.1 delete a director
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/director/ace21d22-236c-11e8-9570-956d65b68a0a [200 OK, 206B, 22ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 7.2 delete a vehicle
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/ad27ffc0-236c-11e8-9570-956d65b68a0a [200 OK, 206B, 18ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 7.3 delete a driver
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/driver/ad5e03e0-236c-11e8-9570-956d65b68a0a [200 OK, 206B, 99ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 7.4-1 delete a OBD
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/adad8370-236c-11e8-9570-956d65b68a0a [200 OK, 206B, 17ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 7.4-2 delete a GPS
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ade953f0-236c-11e8-9570-956d65b68a0a [200 OK, 206B, 17ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 7.4-3 delete a ADAS
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ae1f09f1-236c-11e8-9570-956d65b68a0a [200 OK, 206B, 16ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 7.4-4 delete a BLACKBOX
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/sensor/ae54bff0-236c-11e8-9570-956d65b68a0a [200 OK, 206B, 16ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+❏ 8. delete Company - 403
+↳ 8-1-1 delete a co-company1
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/ab06a660-236c-11e8-8391-833dc5b9c077 [403 Forbidden, 386B, 12ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 8.1-2 delete a co-company2
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/ab4e84d3-236c-11e8-8391-833dc5b9c077 [403 Forbidden, 386B, 12ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 8.2-1 delete a company1
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/a9a20d50-236c-11e8-9570-956d65b68a0a [403 Forbidden, 386B, 13ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+↳ 8.2-1 delete a company2
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/aa1fa1c0-236c-11e8-8391-833dc5b9c077 [403 Forbidden, 386B, 13ms]
+  ✓  status code is 403
+  ✓  Response time is acceptable
+
+❏ 9. delete Company (SA)
+↳ 9-1-1 delete a co-company1
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/ab06a660-236c-11e8-8391-833dc5b9c077 [200 OK, 206B, 35ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 9.1-2 delete a co-company2
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/ab4e84d3-236c-11e8-8391-833dc5b9c077 [200 OK, 206B, 38ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 9.2-1 delete a co-company1 - 404 Test
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/ab06a660-236c-11e8-8391-833dc5b9c077 [404 Not Found, 361B, 17ms]
+  ✓  status code is 404
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 9.2-2 delete a co-company2 - 404 Test
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/ab4e84d3-236c-11e8-8391-833dc5b9c077 [404 Not Found, 361B, 13ms]
+  ✓  status code is 404
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+↳ 9.3-1 delete a company1
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/a9a20d50-236c-11e8-9570-956d65b68a0a [200 OK, 206B, 194ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 9.3-1 delete a company2
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/aa1fa1c0-236c-11e8-8391-833dc5b9c077 [200 OK, 206B, 35ms]
+  ✓  status code is 200
+  ✓  Response time is acceptable
+
+↳ 9.3-2 delete a company  - 404 Test
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/a7e10480-9fce-11e6-8080-808080808080 [404 Not Found, 361B, 11ms]
+  ✓  status code is 404
+  ✓  Response time is acceptable
+  ✓  Content-Type header is set
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │       77 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │       77 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        2 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │      232 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 28.1s                     │
+├───────────────────────────────────────────────┤
+│ total data received: 26.8KB (approx)          │
+├───────────────────────────────────────────────┤
+│ average response time: 37ms                   │
+└───────────────────────────────────────────────┘
+All test finished

@@ -1,0 +1,6271 @@
+{
+	"info": {
+		"_postman_id": "c56fdb41-31be-a128-210e-3e031fa11390",
+		"name": "TEST-V1_0-MainFunction",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "0. CRU company (SA - sysadmin)",
+			"description": "",
+			"item": [
+				{
+					"name": "0.1 login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e803eb60-3df6-43c1-8500-c54c13548c7b",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"// set response time - milliseconds",
+									"postman.setEnvironmentVariable(\"resTime\", 1000 );",
+									"postman.setEnvironmentVariable(\"resContentType\", \"Content-Type\");",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"",
+									"    \"type\" : \"object\",",
+									"    \"required\" : [ \"token\", \"refreshToken\" ],",
+									"    \"properties\" : {",
+									"        \"token\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        ",
+									"        \"refreshToken\" : {",
+									"            \"type\" : \"string\"",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() { pm.expect(tv4.validate(jsonData, schema)).to.be.true; });",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"token\", jsonData.token);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"admin@smartfleet.sktelecom.com\",\"password\":\"smart2017.123$\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "0.2 get my infomation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "77a4eae6-9ebc-4524-9c5c-2907fbe108dc",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    \"definitions\": {",
+									"        \"id\": {",
+									"            \"type\": \"object\",",
+									"            \"properties\": {",
+									"                \"id\": {",
+									"                    \"type\": \"string\",",
+									"                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+									"                }",
+									"            }",
+									"        },",
+									"        \"email\": {",
+									"            \"type\": \"string\",",
+									"            \"format\": \"email\"",
+									"        },",
+									"        \"phone\": {",
+									"            \"type\": \"string\",",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        }",
+									"    },",
+									"    \"type\": \"object\",",
+									"    \"required\": [\"id\", \"createdTime\", \"companyId\", \"name\", \"phone\", \"email\", \"authority\", \"passwordUpdatedTime\"],",
+									"    \"properties\": {",
+									"        \"id\": {",
+									"            \"$ref\": \"#/definitions/id\"",
+									"        },",
+									"        \"createdTime\": {",
+									"            \"type\": \"number\"",
+									"        },",
+									"        \"companyId\": {",
+									"            \"$ref\": \"#/definitions/id\"",
+									"        },",
+									"        \"name\": {",
+									"            \"type\": \"string\"",
+									"        },",
+									"        \"phone\": {",
+									"            \"$ref\": \"#/definitions/phone\"",
+									"        },",
+									"        \"email\": {",
+									"            \"$ref\": \"#/definitions/email\"",
+									"        },",
+									"        \"authority\": {",
+									"            \"type\": \"string\"",
+									"        },",
+									"        \"passwordUpdatedTime\": {",
+									"            \"type\": \"number\"",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"tests[\"Valid scehma\"] = tv4.validate(jsonData, schema);",
+									"",
+									"postman.setEnvironmentVariable(\"companyId\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"companyId\", jsonData.id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/me",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"me"
+							]
+						},
+						"description": "System Admin이 호출할 경우 Master 생성,  Company Admin이 생성할 경우 Sub Company 생성"
+					},
+					"response": []
+				},
+				{
+					"name": "0.3-1 create a company1 (MA1)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c4016806-1635-46e0-993c-c169a514dcf6",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\"); ",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(\"Content-Type\");",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+									"                }",
+									"            }",
+									"        },",
+									"        \"email\" : {",
+									"            \"type\": \"string\", ",
+									"            \"format\": \"email\" ",
+									"        },",
+									"        \"phoneNo\": { ",
+									"            \"type\": \"string\",",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        }",
+									"    },",
+									"    \"type\" : \"object\",",
+									"    \"required\" : [ \"id\", \"createdTime\", \"name\", \"master\", \"masterId\", \"picPasswd\", \"picName\", \"picPhone\", \"picEmail\", \"picDivision\", \"sktManagerName\", \"sktManagerEmail\", \"cooperationTask\", \"notifyErrIdleMin\"],",
+									"    \"properties\" : {",
+									"        \"id\" : {",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"        \"createdTime\" : {",
+									"            \"type\" : \"number\"",
+									"        },",
+									"        \"name\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"master\" : {",
+									"            \"type\" : \"boolean\",",
+									"            \"default\" : true",
+									"        },",
+									"        \"masterId\" : { ",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"       \"picPasswd\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"picName\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"picPhone\" : {",
+									"            \"$ref\": \"#/definitions/phoneNo\" ",
+									"        },",
+									"        \"picEmail\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"picDivision\" :{",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"sktManagerName\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"sktManagerEmail\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"cooperationTask\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"description\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"notifyErrIdleMin\" : {",
+									"            \"type\" : \"number\"",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() { pm.expect(tv4.validate(jsonData, schema)).to.be.true; });",
+									"",
+									"postman.setEnvironmentVariable(\"companyId1\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"companyId1\", jsonData.id.id);",
+									"",
+									"postman.setEnvironmentVariable(\"tokenPrefix\", jsonData.tokenPrefix);",
+									"postman.setGlobalVariable(\"tokenPrefix\", jsonData.tokenPrefix);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"운영사생성1\",\n  \"serviceType\":\"createOperation1\", \n  \"picName\":\"운영사생성1\", \n  \"picEmail\":\"operation1@uangel.com\", \n  \"picPhone\":\"010-5555-7777\",\n  \"picPasswd\":\"pwdOperation\",\n  \"picDivision\":\"운셩사1팀\",\n  \"sktManagerName\":\"sktmanager999999\",\n  \"sktManagerEmail\":\"sktmanager999999@skt.com\",\n  \"cooperationTask\":\"테스트\",\n  \"description\":\"description\",\n  \"notifyHost\":\"http://121.111.111.111:1111/\",\n  \"notifyMsgType\":\"0f\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "0.3-2 create a company - DUP Test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6dea06bf-138c-4e53-af69-256b5ee6d103",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 500\", function(){",
+									"    pm.response.to.have.status(500);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"운영사생성1\",\n  \"serviceType\":\"createOperation1\", \n  \"picName\":\"운영사생성1\", \n  \"picEmail\":\"operation1@uangel.com\", \n  \"picPhone\":\"010-5555-7777\",\n  \"picPasswd\":\"pwdOperation\",\n  \"picDivision\":\"운셩사1팀\",\n  \"sktManagerName\":\"sktmanager999999\",\n  \"sktManagerEmail\":\"sktmanager999999@skt.com\",\n  \"cooperationTask\":\"테스트\",\n  \"description\":\"description\",\n  \"notifyHost\":\"http://121.111.111.111:1111/\",\n  \"notifyMsgType\":\"0f\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "0.3-3 create a company2 (MA2)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\"); ",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(\"Content-Type\");",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+									"                }",
+									"            }",
+									"        },",
+									"        \"email\" : {",
+									"            \"type\": \"string\", ",
+									"            \"format\": \"email\" ",
+									"        },",
+									"        \"phoneNo\": { ",
+									"            \"type\": \"string\",",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        }",
+									"    },",
+									"    \"type\" : \"object\",",
+									"    \"required\" : [ \"id\", \"createdTime\", \"name\", \"master\", \"masterId\", \"picPasswd\", \"picName\", \"picPhone\", \"picEmail\", \"picDivision\", \"sktManagerName\", \"sktManagerEmail\", \"cooperationTask\", \"notifyErrIdleMin\"],",
+									"    \"properties\" : {",
+									"        \"id\" : {",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"        \"createdTime\" : {",
+									"            \"type\" : \"number\"",
+									"        },",
+									"        \"name\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"master\" : {",
+									"            \"type\" : \"boolean\",",
+									"            \"default\" : true",
+									"        },",
+									"        \"masterId\" : { ",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"       \"picPasswd\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"picName\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"picPhone\" : {",
+									"            \"$ref\": \"#/definitions/phoneNo\" ",
+									"        },",
+									"        \"picEmail\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"picDivision\" :{",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"sktManagerName\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"sktManagerEmail\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"cooperationTask\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"description\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"notifyErrIdleMin\" : {",
+									"            \"type\" : \"number\"",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() { pm.expect(tv4.validate(jsonData, schema)).to.be.true; });",
+									"",
+									"postman.setEnvironmentVariable(\"companyId2\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"companyId2\", jsonData.id.id);"
+								],
+								"id": "a0bb8f04-8a47-4ea5-b594-a0f36104738e",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"운영사생성2\",\n  \"serviceType\":\"createOperation2\", \n  \"picName\":\"운영사생성2\", \n  \"picEmail\":\"operation2@uangel.com\", \n  \"picPhone\":\"010-5555-7778\",\n  \"picPasswd\":\"pwdOperation\",\n  \"picDivision\":\"운셩사2팀\",\n  \"sktManagerName\":\"sktmanager999999\",\n  \"sktManagerEmail\":\"sktmanager999999@skt.com\",\n  \"cooperationTask\":\"테스트\",\n  \"description\":\"description\",\n  \"notifyHost\":\"http://121.222.222.222:222/\",\n  \"notifyMsgType\":\"0f\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "0.4-1 get companies list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e81fa8e4-718d-41e7-a04a-9342a5b3240d",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"   \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"",
+									"   \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+									"                }",
+									"            }",
+									"        },",
+									"        \"email\" : {",
+									"            \"type\": \"string\", ",
+									"            \"format\": \"email\" ",
+									"        },",
+									"        \"phone\": { ",
+									"            \"type\": \"string\", ",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        }",
+									"    },",
+									"",
+									"   \"definitionCompany\" : {",
+									"       ",
+									"       \"list\" : {",
+									"           \"type\" : \"object\",",
+									"            ",
+									"            \"required\" : [ \"id\", \"createdTime\", \"name\", \"master\", \"masterId\", \"picPasswd\", \"picName\", \"picPhone\", \"picEmail\", \"picDivision\", \"sktManagerName\", \"sktManagerEmail\", \"cooperationTask\", \"notifyErrIdleMin\"],",
+									"",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"$ref\": \"#/definitions/id\" ",
+									"                },",
+									"                \"createdTime\" : {",
+									"                    \"type\" : \"number\"",
+									"                },",
+									"                \"name\" : {",
+									"                    \"type\" : \"string\"",
+									"                },",
+									"                \"master\" : {",
+									"                    \"type\" : \"boolean\",",
+									"                    \"default\" : true",
+									"                },",
+									"                \"masterId\" : { ",
+									"                    \"$ref\": \"#/definitions/id\" ",
+									"                },",
+									"               \"picPasswd\" : {",
+									"                    \"type\" : \"string\"",
+									"                },",
+									"                \"picName\" : {",
+									"                    \"type\" : \"string\"",
+									"                }, ",
+									"                \"picPhone\" : {",
+									"                    \"$ref\": \"#/definitions/phone\" ",
+									"                },",
+									"                \"picEmail\" : {",
+									"                    \"$ref\": \"#/definitions/email\" ",
+									"                },",
+									"                \"picDivision\" :{",
+									"                    \"type\" : \"string\"",
+									"                },",
+									"                \"sktManagerName\" : {",
+									"                    \"type\" : \"string\"",
+									"                },",
+									"                \"sktManagerEmail\" : {",
+									"                    \"$ref\": \"#/definitions/email\" ",
+									"                },",
+									"                \"cooperationTask\" : {",
+									"                    \"type\" : \"string\"",
+									"                },",
+									"                \"description\" : {",
+									"                    \"type\" : \"string\"",
+									"                }, ",
+									"                \"notifyErrIdleMin\" : {",
+									"                    \"type\" : \"number\"",
+									"                }",
+									"            }",
+									"        }",
+									"    } ,",
+									"",
+									"    \"type\" : \"object\",",
+									"    \"required\" : [ \"data\"],",
+									"",
+									"    \"properties\" : {",
+									"        \"data\" : [{",
+									"            \"$ref\" : \"#/definitionCompany/list\" ",
+									"            } ]",
+									"    }",
+									"}",
+									"",
+									"tests[\"Valid scehma\"] = tv4.validate(jsonData, schema);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/companies/all?limit=30",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"companies",
+								"all"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "30"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "0.4-2 get company by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "583bc96a-0810-4be8-aad3-8b7b270d2ffb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"   \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"   \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+									"                }",
+									"            }",
+									"        },",
+									"        \"email\" : {",
+									"            \"type\": \"string\", ",
+									"            \"format\": \"email\" ",
+									"        },",
+									"        \"phone\": { ",
+									"            \"type\": \"string\", ",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        }",
+									"    },",
+									"    \"type\" : \"object\",",
+									"    \"required\" : [ \"id\", \"createdTime\", \"name\", \"master\", \"masterId\", \"picName\", \"picPhone\", \"picEmail\", \"picDivision\", \"sktManagerName\", \"sktManagerEmail\", \"cooperationTask\", \"notifyErrIdleMin\"],",
+									"    \"properties\" : {",
+									"        \"id\" : {",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"        \"createdTime\" : {",
+									"            \"type\" : \"number\"",
+									"        },",
+									"        \"name\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"master\" : {",
+									"            \"type\" : \"boolean\",",
+									"            \"default\" : true",
+									"        },",
+									"        \"masterId\" : { ",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"        \"picName\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"picPhone\" : {",
+									"            \"$ref\": \"#/definitions/phone\" ",
+									"        },",
+									"        \"picEmail\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"picDivision\" :{",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"sktManagerName\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"sktManagerEmail\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"cooperationTask\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"description\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"notifyErrIdleMin\" : {",
+									"            \"type\" : \"number\"",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"tests[\"Valid scehma\"] = tv4.validate(jsonData, schema);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "0.5 update a company (MA1)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+									"                }",
+									"            }",
+									"        },",
+									"        \"email\" : {",
+									"            \"type\": \"string\", ",
+									"            \"format\": \"email\" ",
+									"        },",
+									"        \"phone\": { ",
+									"            \"type\": \"string\", ",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        }",
+									"    },",
+									"    \"type\" : \"object\",",
+									"    \"required\" : [ \"id\", \"createdTime\", \"name\", \"master\", \"masterId\", \"picName\", \"picPhone\", \"picEmail\", \"picDivision\", \"sktManagerName\", \"sktManagerEmail\", \"cooperationTask\", \"notifyErrIdleMin\"],",
+									"    \"properties\" : {",
+									"        \"id\" : {",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"        \"createdTime\" : {",
+									"            \"type\" : \"number\"",
+									"        },",
+									"        \"name\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"master\" : {",
+									"            \"type\" : \"boolean\",",
+									"            \"default\" : true",
+									"        },",
+									"        \"masterId\" : { ",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"        \"picName\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"picPhone\" : {",
+									"            \"$ref\": \"#/definitions/phone\" ",
+									"        },",
+									"        \"picEmail\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"picDivision\" :{",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"sktManagerName\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"sktManagerEmail\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"cooperationTask\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"description\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"notifyErrIdleMin\" : {",
+									"            \"type\" : \"number\"",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"tests[\"Valid scehma\"] = tv4.validate(jsonData, schema);"
+								],
+								"id": "fac10257-9752-454c-85b3-ad2d7e5938ed",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"picName\":\"운영사생성1\", \n  \"picEmail\":\"operation1@uangel.com\", \n  \"picPhone\":\"010-5555-7777\",\n  \"picDivision\":\"운셩사1팀\",\n  \"sktManagerName\":\"sktmanager999999\",\n  \"sktManagerEmail\":\"sktmanager999999@skt.com\",\n  \"cooperationTask\":\"테스트\",\n  \"description\":\"description\",\n  \"notifyHost\":\"http://121.111.111.111:3111/\",\n  \"notifyMsgType\": \"1,2,3,300,400\",\n  \"notifyErrIdleMin\": 5,\n  \"dataAnalytics\": \"1, 2, 3, 4\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "0.6-1 create a co-company1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "67cd7306-9e7a-4e2c-90da-910347d061bf",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"   \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"   \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+									"                }",
+									"            }",
+									"        },",
+									"        \"email\" : {",
+									"            \"type\": \"string\", ",
+									"            \"format\": \"email\" ",
+									"        },",
+									"        \"phone\": { ",
+									"            \"type\": \"string\", ",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        }",
+									"    },",
+									"    \"type\" : \"object\",",
+									"    \"required\" : [ \"id\", \"createdTime\", \"name\", \"master\", \"masterId\", \"picPasswd\", \"picName\", \"picPhone\", \"picEmail\", \"picDivision\", \"sktManagerName\", \"sktManagerEmail\", \"cooperationTask\", \"notifyErrIdleMin\"],",
+									"    \"properties\" : {",
+									"        \"id\" : {",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"        \"createdTime\" : {",
+									"            \"type\" : \"number\"",
+									"        },",
+									"        \"name\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"master\" : {",
+									"            \"type\" : \"boolean\",",
+									"            \"default\" : true",
+									"        },",
+									"        \"masterId\" : { ",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"       \"picPasswd\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"picName\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"picPhone\" : {",
+									"            \"$ref\": \"#/definitions/phone\" ",
+									"        },",
+									"        \"picEmail\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"picDivision\" :{",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"sktManagerName\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"sktManagerEmail\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"cooperationTask\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"description\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"notifyErrIdleMin\" : {",
+									"            \"type\" : \"number\"",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"tests[\"Valid scehma\"] = tv4.validate(jsonData, schema);",
+									"",
+									"// set companyId",
+									"postman.setEnvironmentVariable(\"co-companyId1\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"co-companyId1\", jsonData.id.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"유엔젤협력사11111\",\n  \"region\":\"대한민국\",\n  \"serviceType\":\"corp111111\", \n  \"picName\":\"협력사이름11111\", \n  \"picEmail\":\"copr111@uangel.com\", \n  \"picPhone\":\"010-4444-4009\",\n  \"picPasswd\":\"uangel88981111\",\n  \"picDivision\":\"협력사1\",\n  \"sktManagerName\":\"sktmanager999999\",\n  \"sktManagerEmail\":\"sktmanager999999@skt.com\",\n  \"cooperationTask\":\"테스트\",\n  \"description\":\"description coorporate\",\n  \"rpcNotifyHost\":\"localhost\",\n  \"rpcNotifyPort\":9000,\n  \"rpcNotifyBasePath\":\"/rpc_noti\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "0.6-2 create a co-company2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "99f472c0-d501-4836-9e23-8444b4dc9d3f",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"   \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"   \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+									"                }",
+									"            }",
+									"        },",
+									"        \"email\" : {",
+									"            \"type\": \"string\", ",
+									"            \"format\": \"email\" ",
+									"        },",
+									"        \"phone\": { ",
+									"            \"type\": \"string\", ",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        }",
+									"    },",
+									"    \"type\" : \"object\",",
+									"    \"required\" : [ \"id\", \"createdTime\", \"name\", \"master\", \"masterId\", \"picPasswd\", \"picName\", \"picPhone\", \"picEmail\", \"picDivision\", \"sktManagerName\", \"sktManagerEmail\", \"cooperationTask\", \"notifyErrIdleMin\"],",
+									"    \"properties\" : {",
+									"        \"id\" : {",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"        \"createdTime\" : {",
+									"            \"type\" : \"number\"",
+									"        },",
+									"        \"name\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"master\" : {",
+									"            \"type\" : \"boolean\",",
+									"            \"default\" : true",
+									"        },",
+									"        \"masterId\" : { ",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"       \"picPasswd\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"picName\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"picPhone\" : {",
+									"            \"$ref\": \"#/definitions/phone\" ",
+									"        },",
+									"        \"picEmail\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"picDivision\" :{",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"sktManagerName\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"sktManagerEmail\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"cooperationTask\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"description\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"notifyErrIdleMin\" : {",
+									"            \"type\" : \"number\"",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"tests[\"Valid scehma\"] = tv4.validate(jsonData, schema);",
+									"",
+									"// set companyId",
+									"postman.setEnvironmentVariable(\"co-companyId2\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"co-companyId2\", jsonData.id.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"유엔젤협력사22222\",\n  \"region\":\"대한민국\",\n  \"serviceType\":\"corp22222\", \n  \"picName\":\"협력사이름22222\", \n  \"picEmail\":\"copr22222@uangel.com\", \n  \"picPhone\":\"010-3333-4009\",\n  \"picPasswd\":\"uangel8898\",\n  \"picDivision\":\"협력사2\",\n  \"sktManagerName\":\"sktmanager999999\",\n  \"sktManagerEmail\":\"sktmanager999999@skt.com\",\n  \"cooperationTask\":\"테스트\",\n  \"description\":\"description coorporate1\",\n  \"rpcNotifyHost\":\"localhost\",\n  \"rpcNotifyPort\":9001,\n  \"rpcNotifyBasePath\":\"/rpc_noti\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "0.7-1 create a co-company1 - DUP Test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7d36774e-a7dd-4ed2-8f07-177f36443fff",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 500\", function(){",
+									"    pm.response.to.have.status(500);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"유엔젤협력사11111\",\n  \"region\":\"대한민국\",\n  \"serviceType\":\"corp111111\", \n  \"picName\":\"협력사이름11111\", \n  \"picEmail\":\"copr111@uangel.com\", \n  \"picPhone\":\"010-4444-4009\",\n  \"picPasswd\":\"uangel88981111\",\n  \"picDivision\":\"협력사1\",\n  \"sktManagerName\":\"sktmanager999999\",\n  \"sktManagerEmail\":\"sktmanager999999@skt.com\",\n  \"cooperationTask\":\"테스트\",\n  \"description\":\"description coorporate\",\n  \"rpcNotifyHost\":\"localhost\",\n  \"rpcNotifyPort\":9000,\n  \"rpcNotifyBasePath\":\"/rpc_noti\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "0.7-2 create a co-company2 - DUP Test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5e2ed736-af90-448d-84cd-5cd3482e8ded",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 500\", function(){",
+									"    pm.response.to.have.status(500);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"유엔젤협력사22222\",\n  \"region\":\"대한민국\",\n  \"serviceType\":\"corp22222\", \n  \"picName\":\"협력사이름22222\", \n  \"picEmail\":\"copr22222@uangel.com\", \n  \"picPhone\":\"010-3333-4009\",\n  \"picPasswd\":\"uangel8898\",\n  \"picDivision\":\"협력사2\",\n  \"sktManagerName\":\"sktmanager999999\",\n  \"sktManagerEmail\":\"sktmanager999999@skt.com\",\n  \"cooperationTask\":\"테스트\",\n  \"description\":\"description coorporate1\",\n  \"rpcNotifyHost\":\"localhost\",\n  \"rpcNotifyPort\":9001,\n  \"rpcNotifyBasePath\":\"/rpc_noti\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "0.8-1 update a co-company1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+									"                }",
+									"            }",
+									"        },",
+									"        \"email\" : {",
+									"            \"type\": \"string\", ",
+									"            \"format\": \"email\" ",
+									"        },",
+									"        \"phone\": { ",
+									"            \"type\": \"string\", ",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        }",
+									"    },",
+									"    \"type\" : \"object\",",
+									"    \"required\" : [ \"id\", \"createdTime\", \"name\", \"master\", \"masterId\", \"picName\", \"picPhone\", \"picEmail\", \"picDivision\", \"sktManagerName\", \"sktManagerEmail\", \"cooperationTask\", \"notifyErrIdleMin\"],",
+									"    \"properties\" : {",
+									"        \"id\" : {",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"        \"createdTime\" : {",
+									"            \"type\" : \"number\"",
+									"        },",
+									"        \"name\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"master\" : {",
+									"            \"type\" : \"boolean\",",
+									"            \"default\" : true",
+									"        },",
+									"        \"masterId\" : { ",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"        \"picName\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"picPhone\" : {",
+									"            \"$ref\": \"#/definitions/phone\" ",
+									"        },",
+									"        \"picEmail\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"picDivision\" :{",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"sktManagerName\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"sktManagerEmail\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"cooperationTask\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"description\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"notifyErrIdleMin\" : {",
+									"            \"type\" : \"number\"",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"tests[\"Valid scehma\"] = tv4.validate(jsonData, schema);"
+								],
+								"id": "9dbfeb6b-5e1c-4c99-ae10-b22bc1470dc7",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"notifyHost\": \"http://localhost:3333/\",\n  \"notifyMsgType\": \"0e\",\n  \"notifyErrIdleMin\":0\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{co-companyId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{co-companyId1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "0.8-2 update a co-company2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+									"                }",
+									"            }",
+									"        },",
+									"        \"email\" : {",
+									"            \"type\": \"string\", ",
+									"            \"format\": \"email\" ",
+									"        },",
+									"        \"phone\": { ",
+									"            \"type\": \"string\", ",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        }",
+									"    },",
+									"    \"type\" : \"object\",",
+									"    \"required\" : [ \"id\", \"createdTime\", \"name\", \"master\", \"masterId\", \"picName\", \"picPhone\", \"picEmail\", \"picDivision\", \"sktManagerName\", \"sktManagerEmail\", \"cooperationTask\", \"notifyErrIdleMin\"],",
+									"    \"properties\" : {",
+									"        \"id\" : {",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"        \"createdTime\" : {",
+									"            \"type\" : \"number\"",
+									"        },",
+									"        \"name\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"master\" : {",
+									"            \"type\" : \"boolean\",",
+									"            \"default\" : true",
+									"        },",
+									"        \"masterId\" : { ",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"        \"picName\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"picPhone\" : {",
+									"            \"$ref\": \"#/definitions/phone\" ",
+									"        },",
+									"        \"picEmail\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"picDivision\" :{",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"sktManagerName\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"sktManagerEmail\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"cooperationTask\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"description\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"notifyErrIdleMin\" : {",
+									"            \"type\" : \"number\"",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"tests[\"Valid scehma\"] = tv4.validate(jsonData, schema);"
+								],
+								"id": "4020d6c1-ca2f-4a73-8cab-a95046a1da8d",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"notifyHost\": \"http://localhost:4444/\",\n  \"notifyMsgType\": \"0e\",\n  \"notifyErrIdleMin\":0\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{co-companyId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{co-companyId2}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "1. setup & create job (MA1 - Master Admin)",
+			"description": "",
+			"item": [
+				{
+					"name": "1.1 login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9637f925-d03f-4c07-a39c-24c2aba0c21a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"",
+									"    \"type\" : \"object\",",
+									"    \"required\" : [ \"token\", \"refreshToken\" ],",
+									"    \"properties\" : {",
+									"        \"token\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        ",
+									"        \"refreshToken\" : {",
+									"            \"type\" : \"string\"",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"",
+									"postman.setGlobalVariable(\"tokenMA\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshTokenMA\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"operation1@uangel.com\",\"password\":\"pwdOperation\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.2 get my infomation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"   \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"   \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+									"                }",
+									"            }",
+									"        },",
+									"        \"email\" : {",
+									"            \"type\": \"string\", ",
+									"            \"format\": \"email\" ",
+									"        },",
+									"        \"phone\": { ",
+									"            \"type\": \"string\", ",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        }",
+									"    },",
+									"    \"type\" : \"object\",",
+									"    \"required\" : [ \"id\", \"createdTime\", \"companyId\", \"name\", \"phone\", \"email\", \"authority\", \"passwordUpdatedTime\"],",
+									"    \"properties\" : {",
+									"        \"id\" : {",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"        \"createdTime\" : {",
+									"            \"type\" : \"number\"",
+									"        },",
+									"        \"companyId\" : { ",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"        \"name\" : {",
+									"            \"type\" : \"string\"",
+									"        }, ",
+									"        \"phone\" : {",
+									"            \"$ref\": \"#/definitions/phone\" ",
+									"        },",
+									"        \"email\" : {",
+									"            \"$ref\": \"#/definitions/email\" ",
+									"        },",
+									"        \"authority\" :{",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        \"passwordUpdatedTime\" : {",
+									"            \"type\" : \"number\"",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"tests[\"Valid scehma\"] = tv4.validate(jsonData, schema);",
+									""
+								],
+								"id": "18208e39-e942-496c-8058-0fe6e9d12a05",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/me",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"me"
+							]
+						},
+						"description": "System Admin이 호출할 경우 Master 생성,  Company Admin이 생성할 경우 Sub Company 생성"
+					},
+					"response": []
+				},
+				{
+					"name": "1.3 create a director",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d8ee6c93-43f6-48ce-9d42-609bb801770f",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        },",
+									"        \"phoneNo\":{",
+									"            \"type\": \"string\",",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        },",
+									"        \"email\":{",
+									"            \"type\": \"string\",",
+									"            \"format\": \"email\" ",
+									"        },",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { ",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"        \"createdTime\" : { ",
+									"            \"type\" : \"integer\" ",
+									"        },",
+									"        \"companyId\" : {",
+									"            \"$ref\": \"#/definitions/id\" ",
+									"        },",
+									"        \"name\" : { ",
+									"            \"type\" : \"string\" ",
+									"        },",
+									"        \"authority\" : { ",
+									"            \"type\" : \"string\" , \"enum\" : [\"DIRECTOR\"]",
+									"        },",
+									"        \"phone\" : { ",
+									"            \"$ref\": \"#/definitions/phoneNo\" ",
+									"        },",
+									"        \"email\" : { ",
+									"            \"$ref\": \"#/definitions/email\"  ",
+									"        },",
+									"        \"passwordUpdatedTime\" : { \"type\" : \"integer\" },",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"",
+									"postman.setEnvironmentVariable(\"directorId\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"directorId\", jsonData.id.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"디렉터생성1\",\n  \"email\": \"createDirector@uangel.com\",\n  \"phone\": \"011-7890-7890\",\n  \"password\": \"uangel123\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/director",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"director"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.4 create a vehicle-1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc09c222-0d7b-4228-8ef9-b11e5676cb3f",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"category\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"usage\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"displacement\" : { \"type\" : [\"integer\",\"null\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"",
+									"postman.setEnvironmentVariable(\"vehicleId\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"vehicleId\", jsonData.id.id);",
+									"",
+									"postman.setEnvironmentVariable(\"vehicleId1\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"vehicleId1\", jsonData.id.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehicleNo\": \"33갑8888\",\n  \"modelName\": \"K5하이브리드\",\n  \"modelCode\": \"12322\",\n  \"vendor\": \"기아자동차\",\n  \"modelYear\" : \"2012\",\n  \"missionType\" : \"AUTO\",\n  \"fuelType\" : \"DIESEL\",\n  \"mileage\": 100\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.4 create a vehicle-2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "423b96c0-87e7-4cb5-a25f-12fcf8dba13a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"category\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"usage\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"displacement\" : { \"type\" : [\"integer\",\"null\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"",
+									"postman.setEnvironmentVariable(\"vehicleId2\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"vehicleId2\", jsonData.id.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehicleNo\": \"33르노8888\",\n  \"modelName\": \"SM5\",\n  \"modelCode\": \"3343\",\n  \"vendor\": \"르노자동차\",\n  \"modelYear\" : \"2018\",\n  \"missionType\" : \"AUTO\",\n  \"fuelType\" : \"GASOLINE\",\n  \"mileage\": 100\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.4 create a vehicle-3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7ff02141-0e33-4e73-b494-36f29bbfc536",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"category\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"usage\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"displacement\" : { \"type\" : [\"integer\",\"null\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"",
+									"postman.setEnvironmentVariable(\"vehicleId3\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"vehicleId3\", jsonData.id.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehicleNo\": \"11g현대8888\",\n  \"modelName\": \"그랜저\",\n  \"modelCode\": \"12322\",\n  \"vendor\": \"현대자동차\",\n  \"modelYear\" : \"2017\",\n  \"missionType\" : \"AUTO\",\n  \"fuelType\" : \"GASOLINE\",\n  \"mileage\": 100\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.4 create a vehicle-4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "efa70f8b-39ff-43d7-9cac-335bfa179feb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"category\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"usage\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"displacement\" : { \"type\" : [\"integer\",\"null\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"",
+									"postman.setEnvironmentVariable(\"vehicleId4\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"vehicleId4\", jsonData.id.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vehicleNo\": \"33아8888\",\n  \"modelName\": \"아우디20\",\n  \"modelCode\": \"12322\",\n  \"vendor\": \"독일아우디\",\n  \"modelYear\" : \"2016\",\n  \"missionType\" : \"AUTO\",\n  \"fuelType\" : \"DIESEL\",\n  \"mileage\": 100\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.5 get vehicle list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "18b7fbb8-dbbc-4986-8bd4-02ba0ca9dbae",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId1}}/vehicles?limit=3&condition=all",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId1}}",
+								"vehicles"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "3"
+								},
+								{
+									"key": "condition",
+									"value": "all"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.5 create a driver",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e8e3cd89-2f7f-4749-91e3-f8f518c0b5c8",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"driverId\", jsonData.id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"드라이버생성1\",\n  \"email\": \"createDriver@uangel.com\",\n  \"phone\": \"031-1234-1234\",\n  \"password\": \"abcd\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/driver",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"driver"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.6-1 create a OBD",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "afdbf041-0998-42b4-9680-3319e5a22225",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"credentialsId\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() { pm.expect(tv4.validate(jsonData, schema)).to.be.true; });",
+									"",
+									"postman.setEnvironmentVariable(\"OBD_ID\", jsonData.id.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"serialNo\": \"{{tokenPrefix}}OBD1234567890123\",\n  \"credentialsId\":\"{{tokenPrefix}}O1234567890123\",\n  \"vendor\": \"uangelOBD123\",\n  \"type\": \"OBD\",\n  \"additionalInfo\":{\n  \"extra\":\"infoTest\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.6-2 create a GPS",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4438ea2e-f895-473d-908c-a7ab9d19da85",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"credentialsId\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [\"GPS\"]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"postman.setEnvironmentVariable(\"GPS_ID\", jsonData.id.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"serialNo\": \"{{tokenPrefix}}GPS1234567890123\",\n  \"credentialsId\":\"{{tokenPrefix}}G1234567890123\",\n  \"vendor\": \"uangelGPS123\",\n  \"type\": \"GPS\",\n  \"additionalInfo\":{\n  \"extra\":\"infoTest\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.6-3 create a ADAS",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "29a4b0b7-cb83-4a0c-a7ad-ab435630c410",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"",
+									"    \"definitions\": {",
+									"        \"id\": {",
+									"            \"type\": \"object\",",
+									"            \"properties\": {",
+									"                \"id\": {",
+									"                    \"type\": \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"",
+									"    \"type\": \"object\",",
+									"",
+									"    \"properties\": {",
+									"        \"id\": {",
+									"            \"$ref\": \"#/definitions/id\"",
+									"        },",
+									"        \"createdTime\": {",
+									"            \"type\": \"integer\"",
+									"        },",
+									"        \"vehicleId\": {",
+									"            \"$ref\": \"#/definitions/id\"",
+									"        },",
+									"        \"companyId\": {",
+									"            \"$ref\": \"#/definitions/id\"",
+									"        },",
+									"        \"directorId\": {",
+									"            \"$ref\": \"#/definitions/id\"",
+									"        },",
+									"        \"serialNo\": {",
+									"            \"type\": \"string\"",
+									"        },",
+									"        \"credentialsId\": {",
+									"            \"type\": \"string\"",
+									"        },",
+									"        \"vendor\": {",
+									"            \"type\": \"string\"",
+									"        },",
+									"        \"type\": {",
+									"            \"type\": \"string\",",
+									"            \"enum\": [\"ADAS\"]",
+									"        },",
+									"        \"activationRequired\": {",
+									"            \"type\": [\"boolean\", \"null\"]",
+									"        },",
+									"        \"additionalInfo\": {",
+									"            \"type\": [\"object\", \"string\", \"null\"]",
+									"        },",
+									"        \"status\": {",
+									"            \"type\": [\"string\", \"null\"]",
+									"        },",
+									"        \"vehicleNo\": {",
+									"            \"type\": [\"string\", \"null\"]",
+									"        },",
+									"        \"mdn\": {",
+									"            \"type\": [\"string\", \"null\"]",
+									"        },",
+									"        \"nwStatus\": {",
+									"            \"type\": [\"string\", \"null\"]",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"postman.setEnvironmentVariable(\"ADAS_ID\", jsonData.id.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"serialNo\": \"{{tokenPrefix}}ADAS1234567890123\",\n  \"credentialsId\":\"{{tokenPrefix}}A1234567890123\",\n  \"vendor\": \"uangelADAS123\",\n  \"type\": \"ADAS\",\n  \"additionalInfo\":{\n  \"extra\":\"infoTest\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.6-4 create a BLACKBOX",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fa7fbec2-7043-40be-963b-8707d7441a79",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"credentialsId\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [\"BLACKBOX\" ]},",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"postman.setEnvironmentVariable(\"BLACKBOX_ID\", jsonData.id.id);",
+									"postman.setGlobalVariable(\"sensorId4\", jsonData.id.id);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"serialNo\": \"{{tokenPrefix}}BLA1234567890123\",\n  \"credentialsId\":\"{{tokenPrefix}}B1234567890123\",\n  \"vendor\": \"uangelBLACKBOX123\",\n  \"type\": \"BLACKBOX\",\n  \"additionalInfo\":{\n  \"extra\":\"infoTest\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1-7 vehicles count (4)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1_2/company/{{companyId1}}/vehicles/cnt",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1_2",
+								"company",
+								"{{companyId1}}",
+								"vehicles",
+								"cnt"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1-8 driver count (1)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1_2/company/{{companyId1}}/drivers/cnt",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1_2",
+								"company",
+								"{{companyId1}}",
+								"drivers",
+								"cnt"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1-9 sensors count (4)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1_2/company/{{companyId1}}/sensors/cnt",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1_2",
+								"company",
+								"{{companyId1}}",
+								"sensors",
+								"cnt"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. assign, activity & attach job (MA2) - 403",
+			"description": "",
+			"item": [
+				{
+					"name": "2.1 login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"",
+									"    \"type\" : \"object\",",
+									"    \"required\" : [ \"token\", \"refreshToken\" ],",
+									"    \"properties\" : {",
+									"        \"token\" : {",
+									"            \"type\" : \"string\"",
+									"        },",
+									"        ",
+									"        \"refreshToken\" : {",
+									"            \"type\" : \"string\"",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"",
+									"postman.setGlobalVariable(\"tokenMA2\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshTokenMA2\", jsonData.refreshToken);"
+								],
+								"id": "526a650a-9994-4b95-b355-fa215599291d",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"operation2@uangel.com\",\"password\":\"pwdOperation\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.2 assign vehicle to director",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "222e2b5e-fb64-43f8-8df1-3c2e24382cd8",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/director/{{directorId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"director",
+								"{{directorId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.3 activity vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "25ff70ca-bb39-4801-902b-3dfb3185409a",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"activate\": true}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/activate",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"activate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.4-1 attach OBD to vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "ed980904-739f-47d3-b2e3-1a717a833398",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{OBD_ID}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{OBD_ID}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.4-2 attach GPS to vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "29b36a51-f6d7-4c1a-afdc-9cb3276c7f74",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{GPS_ID}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{GPS_ID}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.4-3 attach ADAS to vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "e0f81ed4-31ef-4ce8-b9f3-3938cdbbafb4",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{ADAS_ID}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{ADAS_ID}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.4-4 attach BLACKBOX to vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "4367fe55-b4c5-43d1-aabb-140a15153d46",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{BLACKBOX_ID}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{BLACKBOX_ID}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.4 assign driver to vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 400\", function(){",
+									"    pm.response.to.have.status(400);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "8a347895-66d9-4191-ab8e-015045d35fae",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/driver/{{driverId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"driver",
+								"{{driverId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. assign, activity & attach job (MA1)",
+			"description": "",
+			"item": [
+				{
+					"name": "3.1 assign vehicle to director",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"category\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"usage\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"displacement\" : { \"type\" : [\"integer\",\"null\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() { pm.expect(tv4.validate(jsonData, schema)).to.be.true; });",
+									"",
+									"pm.test(\"Valid director Id\", function () {",
+									"    pm.expect(jsonData.directorId.id).to.not.equal(\"13814000-1dd2-11b2-8080-808080808080\");",
+									"});"
+								],
+								"id": "3fc71fa5-00ed-419b-a6bc-da9f0db29d8e",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/director/{{directorId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"director",
+								"{{directorId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.2 activity vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"currentDriverId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serviceType\" : { \"type\" : \"string\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"sensorCount\" : { \"type\" : \"number\" },",
+									"        \"status\" : { \"type\" : \"string\", \"enum\" : [ \"ACTIVATED\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"displacement\" : { \"type\" : \"integer\" },",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"delegateUserCount\" : { \"type\" : \"integer\" },",
+									"        \"lastTripMsgType\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() { pm.expect(tv4.validate(jsonData, schema)).to.be.true; });",
+									"",
+									"pm.test(\"Valid director Id\", function () {",
+									"    pm.expect(jsonData.directorId.id).to.not.equal(\"13814000-1dd2-11b2-8080-808080808080\");",
+									"});"
+								],
+								"id": "5a531b64-b1ab-45ee-a093-575226845841",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"activate\": true}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/activate",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"activate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.3-1 attach OBD to vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"status\" : { \"type\" : \"string\", \"enum\" : [ \"ACTIVATED\"] },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"vehicleNo\": { \"type\" : \"string\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() { ",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Valid vehicle Id\", function () {",
+									"    pm.expect(jsonData.vehicleId.id).to.not.equal(\"13814000-1dd2-11b2-8080-808080808080\");",
+									"});"
+								],
+								"id": "472a3bfb-d20e-42fd-85ee-841184d466fa",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{OBD_ID}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{OBD_ID}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.3-2 attach GPS to vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"status\" : { \"type\" : \"string\", \"enum\" : [ \"ACTIVATED\"] },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"vehicleNo\": { \"type\" : \"string\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() { ",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Valid vehicle Id\", function () {",
+									"    pm.expect(jsonData.vehicleId.id).to.not.equal(\"13814000-1dd2-11b2-8080-808080808080\");",
+									"});"
+								],
+								"id": "c5f4a4a3-5b80-4ff6-9b66-2df47f854e18",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{GPS_ID}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{GPS_ID}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.3-3 attach ADAS to vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"status\" : { \"type\" : \"string\", \"enum\" : [ \"ACTIVATED\"] },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"vehicleNo\": { \"type\" : \"string\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() { ",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Valid vehicle Id\", function () {",
+									"    pm.expect(jsonData.vehicleId.id).to.not.equal(\"13814000-1dd2-11b2-8080-808080808080\");",
+									"});"
+								],
+								"id": "8b1c5ded-859e-4849-8e19-1ecfcbbbc195",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{ADAS_ID}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{ADAS_ID}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.3-4 attach BLACKBOX to vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"status\" : { \"type\" : \"string\", \"enum\" : [ \"ACTIVATED\"] },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
+									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
+									"        \"vehicleNo\": { \"type\" : \"string\" },",
+									"        \"serialNo\" : { \"type\" : \"string\" },",
+									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
+									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() { ",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Valid vehicle Id\", function () {",
+									"    pm.expect(jsonData.vehicleId.id).to.not.equal(\"13814000-1dd2-11b2-8080-808080808080\");",
+									"});"
+								],
+								"id": "b3cf8255-6006-4727-a583-2734b7be6640",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{BLACKBOX_ID}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{BLACKBOX_ID}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.4 assign driver to vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },        ",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"currentDriverId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serviceType\" : { \"type\" : \"string\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"sensorCount\" : { \"type\" : \"number\" },",
+									"        \"status\" : { \"type\" : \"string\", \"enum\" : [ \"ACTIVATED\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"displacement\" : { \"type\" : \"integer\" },",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"delegateUserCount\" : { \"type\" : \"integer\" },",
+									"        \"lastTripMsgType\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() { pm.expect(tv4.validate(jsonData, schema)).to.be.true; });"
+								],
+								"id": "e99adbef-15bf-4622-8ede-6472700f718c",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/driver/{{driverId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"driver",
+								"{{driverId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4. unassign, inactivity & detach job (MA2) - 403",
+			"description": "",
+			"item": [
+				{
+					"name": "4.1 unassign driver to vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "9ff918ba-7257-4e7e-bf64-eb1137b62113",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/driver/{{driverId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"driver",
+								"{{driverId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.2-1 detach OBD from vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "74480246-4155-45a8-b3ea-fdde472828ae",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{OBD_ID}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{OBD_ID}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.2-2 detach GPS from vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "8a5e69f0-a6e4-4768-81e8-9ea2e9518c4b",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{GPS_ID}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{GPS_ID}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.2-3 detach ADAS from vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "4c2690f1-f82d-400c-b7d0-442e918a787f",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{ADAS_ID}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{ADAS_ID}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.2-4 detach BLACKBOX from vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "7822b1a4-c1a0-4af6-b9bd-8231822e669b",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{BLACKBOX_ID}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{BLACKBOX_ID}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.3 inactivity a vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "3dcfad92-60d2-43ed-82ee-5131d4f1fc4d",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"activate\": false}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/activate",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"activate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.4 unassign vehicle to director",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "f06e7b0c-b3ea-4946-808d-8301a7228137",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/director/{{directorId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"director",
+								"{{directorId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "5. unassign, inactivity & detach job (MA1)",
+			"description": "",
+			"item": [
+				{
+					"name": "5.1 unassign driver to vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },        ",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"currentDriverId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serviceType\" : { \"type\" : \"string\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"sensorCount\" : { \"type\" : \"number\" },",
+									"        \"status\" : { \"type\" : \"string\", \"enum\" : [ \"ACTIVATED\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"displacement\" : { \"type\" : \"integer\" },",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"delegateUserCount\" : { \"type\" : \"integer\" },",
+									"        \"lastTripMsgType\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() { ",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});"
+								],
+								"id": "a9b2384d-acf3-4b4a-8cb0-4d74d4fb6365",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/driver/{{driverId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"driver",
+								"{{driverId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.2-1 detach OBD from vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);"
+								],
+								"id": "6e86a9dc-9799-4beb-b61e-14fe10cd2563",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{OBD_ID}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{OBD_ID}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.2-2 detach GPS from vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);"
+								],
+								"id": "68b1f239-8614-4e64-a4f9-5ab86316d859",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{GPS_ID}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{GPS_ID}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.2-3 detach ADAS from vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);"
+								],
+								"id": "6a75dee7-3c6e-4866-96e5-873ffbde2457",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{ADAS_ID}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{ADAS_ID}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.2-4 detach BLACKBOX from vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);"
+								],
+								"id": "8cae0d31-9799-4d5e-bf22-dba9ae3e498f",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{BLACKBOX_ID}}/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{BLACKBOX_ID}}",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.3 inactivity a vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"currentDriverId\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"serviceType\" : { \"type\" : \"string\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"sensorCount\" : { \"type\" : \"number\" },",
+									"        \"status\" : { \"type\" : \"string\", \"enum\" : [ \"DEACTIVATED\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"displacement\" : { \"type\" : \"integer\" },",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"delegateUserCount\" : { \"type\" : \"integer\" },",
+									"        \"lastTripMsgType\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() { pm.expect(tv4.validate(jsonData, schema)).to.be.true; });",
+									"",
+									"pm.test(\"Valid director Id\", function () {",
+									"    pm.expect(jsonData.directorId.id).to.not.equal(\"13814000-1dd2-11b2-8080-808080808080\");",
+									"});"
+								],
+								"id": "0304a4f6-8653-43ab-81ab-4130a7359bfb",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"activate\": false}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/activate",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"activate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.4 unassign vehicle to director",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"category\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"usage\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"displacement\" : { \"type\" : [\"integer\",\"null\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() { pm.expect(tv4.validate(jsonData, schema)).to.be.true; });"
+								],
+								"id": "9b3cb154-6ea7-4b0e-add4-a6864e03a5e9",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/director/{{directorId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"director",
+								"{{directorId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "6. cleanup & delete job (MA2) - 403",
+			"description": "",
+			"item": [
+				{
+					"name": "6.1 delete a director",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f76138de-7500-4202-b4ac-28fe2a657f3f",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/director/{{directorId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"director",
+								"{{directorId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.2 delete a vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "a6d762da-1b68-4085-b8f4-f19471f9c094",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.3 delete a driver",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "25772643-8387-41b6-b621-6be332b5ddb1",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"김지한\",\n  \"email\": \"jihanKim@uangel.com\",\n  \"phone\": \"010-1111-2222\",\n  \"password\": \"abcd\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/driver/{{driverId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"driver",
+								"{{driverId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.4-1 delete a OBD",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bafd404c-1e09-4ab2-b1b8-d87441b1d8a6",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{OBD_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{OBD_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.4-2 delete a GPS",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "da932450-2182-4b8c-9954-b89907b36ef0",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{GPS_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{GPS_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.4-3 delete a ADAS",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5c30b1b4-9235-482b-9c27-ab644b1321d6",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{ADAS_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{ADAS_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.4-4 delete a BLACKBOX",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dbcf7bb3-cd0e-4ea1-826b-264c32045ec2",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA2}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{BLACKBOX_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{BLACKBOX_ID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "7. cleanup & delete job (MA1)",
+			"description": "",
+			"item": [
+				{
+					"name": "7.1 delete a director",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cf6886aa-ba13-4a3e-b05a-18688ac9d58a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/director/{{directorId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"director",
+								"{{directorId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.2 delete a vehicle-1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "60473838-a237-442c-bad0-633fe491d43b",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.2 delete a vehicle-2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "60473838-a237-442c-bad0-633fe491d43b",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.2 delete a vehicle-3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "60473838-a237-442c-bad0-633fe491d43b",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId3}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId3}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.2 delete a vehicle-4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "60473838-a237-442c-bad0-633fe491d43b",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId4}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId4}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.3 delete a driver",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bdd27302-b427-44f9-8efe-9411276b0868",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"김지한\",\n  \"email\": \"jihanKim@uangel.com\",\n  \"phone\": \"010-1111-2222\",\n  \"password\": \"abcd\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/driver/{{driverId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"driver",
+								"{{driverId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.4-1 delete a OBD",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "12eddc79-498d-432f-82f8-3e4139d383fe",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{OBD_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{OBD_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.4-2 delete a GPS",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fb7eff61-8fd4-47e0-b9e1-fdd44b211d9d",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{GPS_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{GPS_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.4-3 delete a ADAS",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "de3109d5-c4e7-45f0-99c5-e82763837f7f",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{ADAS_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{ADAS_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.4-4 delete a BLACKBOX",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4164985e-2c1f-4769-b3c3-68a7c6ee0c0c",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/sensor/{{BLACKBOX_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"sensor",
+								"{{BLACKBOX_ID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "8. delete Company - 403",
+			"description": "",
+			"item": [
+				{
+					"name": "8-1-1 delete a co-company1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "bc59d803-107a-4e47-8b3a-e932c78dcca0",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{co-companyId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{co-companyId1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8.1-2 delete a co-company2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "432d7a67-f95a-4664-aeff-489b894bcabd",
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"id": "062dad65-c36d-4e61-8501-4a126d219c73",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{co-companyId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{co-companyId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8.2-1 delete a company1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "4f9f7f94-911b-4b89-b0d8-7ebeb115f35a",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8.2-1 delete a company2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									""
+								],
+								"id": "e71ee44a-3847-4a09-92eb-a193577c88a2",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{tokenMA}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId2}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "9. delete Company (SA)",
+			"description": "",
+			"item": [
+				{
+					"name": "9-1-1 delete a co-company1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								],
+								"id": "e00e5d5d-569f-4e31-b3bd-67c234723c9f",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{co-companyId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{co-companyId1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9.1-2 delete a co-company2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2ca29847-8f91-4219-a14c-7bd8b60affbc",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "062dad65-c36d-4e61-8501-4a126d219c73",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{co-companyId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{co-companyId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9.2-1 delete a co-company1 - 404 Test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "11e0121f-e455-4116-be98-eff8044a1bb0",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 404\", function(){",
+									"    pm.response.to.have.status(404);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{co-companyId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{co-companyId1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9.2-2 delete a co-company2 - 404 Test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "96cc88a6-a62a-4f06-864c-984ac99141cd",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 404\", function(){",
+									"    pm.response.to.have.status(404);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{co-companyId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{co-companyId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9.3-1 delete a company1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0b3e9353-31e6-43aa-aa18-b1137fc1ec03",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9.3-1 delete a company2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0b3e9353-31e6-43aa-aa18-b1137fc1ec03",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9.3-2 delete a company  - 404 Test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "83422134-49fa-4006-b14b-911bd14f22da",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 404\", function(){",
+									"    pm.response.to.have.status(404);    ",
+									"});",
+									"",
+									"tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+									"tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+									"",
+									"var jsonData = JSON.parse(responseBody);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/company/{{companyId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"company",
+								"{{companyId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

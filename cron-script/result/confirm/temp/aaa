@@ -1,0 +1,34 @@
+ #!/bin/bash
+ cd /home/sfmgr/TEST/cron-script/result/confirm/temp
+# tail -20 TEST-V1_1-DeviceType.201803050945 | sed '13,20d'| sed '11d'| sed '9d'|sed '7d'|sed '5d' | sed '1,3d'
+tail -20 TEST-V1_1-DeviceType.201803050945 | sed -n '4p' | cut -c53
+tail -20 TEST-V1_1-DeviceType.201803050945 | sed -n '6p' | cut -c53
+tail -20 TEST-V1_1-DeviceType.201803050945 | sed -n '8p' | cut -c53
+tail -20 TEST-V1_1-DeviceType.201803050945 | sed -n '10p' | cut -c53
+tail -20 TEST-V1_1-DeviceType.201803050945 | sed -n '12p' | cut -c53
+
+#a1=tail -20 TEST-V1_1-DeviceType.201803050945 | sed -n '4p' | cut -c53
+#a2=tail -20 TEST-V1_1-DeviceType.201803050945 | sed -n '6p' | cut -c53
+#a3=tail -20 TEST-V1_1-DeviceType.201803050945 | sed -n '8p' | cut -c53
+#a4=tail -20 TEST-V1_1-DeviceType.201803050945 | sed -n '10p' | cut -c53
+#a5=tail -20 TEST-V1_1-DeviceType.201803050945 | sed -n '12p' | cut -c53
+#if [ $a1 != 0]
+#then
+#	echo "ERROR"
+#elif [ $a2 != 0]
+#then
+#	echo "ERROR"
+#elif [ $a3 != 0]
+#then
+#	echo "ERROR"
+#elif [ $a4 != 0]
+#then
+#	echo "ERROR"
+#elif [ $a5 != 0]
+#then
+#	echo "ERROR"
+#else
+#	echo "SUCDESS"
+#
+exit 0
+

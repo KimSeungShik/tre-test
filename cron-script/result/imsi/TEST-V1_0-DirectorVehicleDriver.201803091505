@@ -1,0 +1,213 @@
+newman
+
+TEST-V1_0-Director_Vehicle_Driver
+
+❏ Master Company 생성
+↳ login (sysadmin)
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.21KB, 168ms]
+  ✓  Status code is 200
+
+↳ create a company
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/company [200 OK, 814B, 142ms]
+  ✓  Status code is 200
+
+↳ login (master admin)
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.2KB, 113ms]
+  ✓  Status code is 200
+
+❏ 디렉터 및 차량 생성 (중복생성 포함)
+↳ 디렉터1 생성
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/director [200 OK, 587B, 125ms]
+  ✓  status code is 200
+  ┌
+  │ 'Validation failed: ', null
+  └
+  ✓  Status code is 200
+  ✓  Valid scehma
+
+↳ 디렉터1 생성 재시도 (500)
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/director [500 Internal Server Error, 390B, 13ms]
+  ✓  Status code is 500(DUP) OK
+
+↳ 디렉터2 생성
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/director [200 OK, 587B, 175ms]
+  ✓  Status code is 200
+
+↳ 차량1 생성
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle [200 OK, 856B, 16ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+
+↳ 차량2 생성
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle [200 OK, 856B, 23ms]
+  ✓  Status code is 200
+
+↳ 차량2 생성 재시도 (500)
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle [500 Internal Server Error, 400B, 17ms]
+  ✓  Status code is 500(DUP) OK
+
+❏ 디렉터차량할당(미존재ID할당 포함)
+↳ 디렉터에 차량 할당 : 없는 디렉터ID (404)
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077/director/d51c6830-0d77-11e8-89ec-35b60720f5cf [404 Not Found, 361B, 45ms]
+  ✓  Status code is 404 OK
+
+↳ 디렉터에 차량 할당 : 없는 차량ID (404)
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/d53c5830-0d66-11e8-89ec-35b60720f5cf/director/cf3ee130-235f-11e8-9570-956d65b68a0a [404 Not Found, 361B, 11ms]
+  ✓  Status code is 404 OK
+
+↳ 디렉터1에 차량1 할당
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077/director/cf3ee130-235f-11e8-9570-956d65b68a0a [200 OK, 856B, 17ms]
+  ✓  status code is 200
+  ✓  Schema is valid
+  ┌
+  │ 'Validation failed: ', null
+  └
+
+↳ 디렉터2에 차량1 할당
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077/director/cf7f4590-235f-11e8-8391-833dc5b9c077 [200 OK, 856B, 18ms]
+  ✓  Status code is 200
+  ✓  차량1 디렉터2 변경
+
+↳ 차량1 정보조회 (디렉터2 확인)
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077 [200 OK, 856B, 14ms]
+  ✓  Status code is 200
+  ✓  차량1 디렉터2 변경
+
+↳ 디렉터1에 차량1 할당
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077/director/cf3ee130-235f-11e8-9570-956d65b68a0a [200 OK, 856B, 17ms]
+  ✓  Status code is 200
+
+↳ 차량1 정보조회 (디렉터1 확인)
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077 [200 OK, 856B, 14ms]
+  ✓  Status code is 200
+  ✓  차량1 디렉터1 변경
+
+❏ 드라이버생성
+↳ 드라이버1 생성
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/driver [200 OK, 579B, 130ms]
+  ✓  Status code is 200
+
+↳ 드라이버2 생성
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/driver [200 OK, 579B, 131ms]
+  ✓  Status code is 200
+
+❏ 드라이버 할당 및 해제(할당드라이버 재할당포함)
+↳ 차량 활성화
+  PUT https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077/activate [200 OK, 854B, 15ms]
+  ✓  Status code is 200
+
+↳ 차량1에 드라이버1 할당
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077/driver/d0820f90-235f-11e8-9a57-bf7af28e956c [200 OK, 854B, 18ms]
+  ✓  Status code is 200
+
+↳ 차량2에 드라이버1 할당 (400)
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfbd38f0-235f-11e8-8391-833dc5b9c077/driver/d0820f90-235f-11e8-9a57-bf7af28e956c [400 Bad Request, 400B, 13ms]
+  ✓  Status code is 400 OK 이미 할당된 드라이버
+
+↳ 차량2에 드라이버2 할당
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfbd38f0-235f-11e8-8391-833dc5b9c077/driver/d0a8d173-235f-11e8-9a57-bf7af28e956c [400 Bad Request, 376B, 48ms]
+  ✓  Status code is 400 OK 비활성화 차량
+
+↳ 차량1에 드라이버2 할당 (400)
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077/driver/d0a8d173-235f-11e8-9a57-bf7af28e956c [400 Bad Request, 374B, 47ms]
+  ✓  Status code is 400 OK (EXIST)
+
+↳ 차량1에 드라이버1 할당 해제
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077/driver/d0820f90-235f-11e8-9a57-bf7af28e956c [200 OK, 854B, 54ms]
+  ✓  Status code is 200
+
+↳ 차량1에 드라이버2 할당
+  POST https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077/driver/d0a8d173-235f-11e8-9a57-bf7af28e956c [200 OK, 854B, 24ms]
+  ✓  Status code is 200
+
+↳ 차량1에 드라이버1 할당 해제 (400)
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077/driver/d0820f90-235f-11e8-9a57-bf7af28e956c [400 Bad Request, 371B, 15ms]
+  ✓  Status code is 400 OK (Invalid)
+
+↳ 차량1에 드라이버2 할당 해제
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077/driver/d0a8d173-235f-11e8-9a57-bf7af28e956c [200 OK, 854B, 49ms]
+  ✓  Status code is 200
+
+❏ 차량정보수정 & 비활성화 & 삭제 (차량중복삭제포함)
+↳ 차량 수정
+  PUT https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077 [200 OK, 854B, 15ms]
+  ✓  Status code is 200
+  ✓  2017->2018 변경
+
+↳ 차량 비활성화
+  PUT https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077/activate [200 OK, 856B, 15ms]
+  ✓  Status code is 200
+
+↳ 차량1 삭제
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077 [200 OK, 206B, 16ms]
+  ✓  Status code is 200
+
+↳ 차량2 삭제
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfbd38f0-235f-11e8-8391-833dc5b9c077 [200 OK, 206B, 17ms]
+  ✓  Status code is 200
+
+↳ 차량1 중복 삭제 (404)
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/vehicle/cfa6cac0-235f-11e8-8391-833dc5b9c077 [404 Not Found, 353B, 10ms]
+  ✓  Status code is 404 OK Not Found
+
+↳ 드라이버1 삭제
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/driver/d0820f90-235f-11e8-9a57-bf7af28e956c [200 OK, 206B, 15ms]
+  ✓  Status code is 200
+
+↳ 드라이버2 삭제
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/driver/d0a8d173-235f-11e8-9a57-bf7af28e956c [200 OK, 206B, 15ms]
+  ✓  Status code is 200
+
+↳ 드라이버2 중복 삭제 (404)
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/driver/d0a8d173-235f-11e8-9a57-bf7af28e956c [404 Not Found, 350B, 9ms]
+  ✓  Status code is 404 OK Not Found
+
+❏ 디렉터삭제(중복삭제포함)
+↳ 디렉터1 삭제
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/director/cf3ee130-235f-11e8-9570-956d65b68a0a [200 OK, 206B, 15ms]
+  ✓  Status code is 200
+
+↳ 디렉터2 삭제
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/director/cf7f4590-235f-11e8-8391-833dc5b9c077 [200 OK, 206B, 18ms]
+  ✓  Status code is 200
+
+↳ 디렉터2 중복 삭제 (404)
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/director/cf3ee130-235f-11e8-9570-956d65b68a0a [404 Not Found, 350B, 11ms]
+  ✓  Status code is 404 OK Not Found
+
+❏ Master Company 삭제
+↳ login (sysadmin) copy
+  POST https://smartfleet.sktelecom.com:8080/api/auth/login [200 OK, 1.21KB, 110ms]
+  ✓  Status code is 200
+
+↳ master company 정보조회
+  GET https://smartfleet.sktelecom.com:8080/api/tre/v1/companies?serviceType=pccc&limit=1 [200 OK, 971B, 11ms]
+  ✓  Status code is 200
+
+↳ delete master company
+  DELETE https://smartfleet.sktelecom.com:8080/api/tre/v1/company/cef33230-235f-11e8-9570-956d65b68a0a [200 OK, 206B, 60ms]
+  ✓  Status code is 200
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │       41 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │       41 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │       49 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 6.9s                      │
+├───────────────────────────────────────────────┤
+│ total data received: 14.47KB (approx)         │
+├───────────────────────────────────────────────┤
+│ average response time: 44ms                   │
+└───────────────────────────────────────────────┘
+All test finished
