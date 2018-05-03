@@ -1,8 +1,7 @@
 {
 	"info": {
-		"name": "TEST-V1_1-Packet",
-		"_postman_id": "90db0d17-5ba5-489e-755e-6e065c970421",
-		"description": "",
+		"_postman_id": "dba782ef-b970-49ae-98fd-053b0eb4411c",
+		"name": "TEST-V1_0-GetVehicleInfo",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -57,8 +56,7 @@
 								"auth",
 								"login"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -68,7 +66,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "63402556-a073-49c9-b283-ac457710c448",
+								"id": "55abcc6b-d8f4-40eb-ae57-959b8bb92a46",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"status code is 200\", function(){",
@@ -162,7 +160,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\":\"packettest\",\n  \"serviceType\":\"packettest\", \n  \"picName\":\"packettest\", \n  \"picEmail\":\"test@packettest.com\", \n  \"picPhone\":\"010-6662-3348\",\n  \"picPasswd\":\"test1234\",\n  \"picDivision\":\"사업1팀\",\n  \"sktManagerName\":\"manager1\",\n  \"sktManagerEmail\":\"xyz@xxx.com\",\n  \"cooperationTask\":\"수리\",\n  \"description\":\"additional description\"\n}"
+							"raw": "{\n  \"name\":\"getvehicleinfo\",\n  \"serviceType\":\"getvehicleinfo\", \n  \"picName\":\"getvehicleinfo\", \n  \"picEmail\":\"test@getvehicleinfo.com\", \n  \"picPhone\":\"011-3732-9999\",\n  \"picPasswd\":\"test1234\",\n  \"picDivision\":\"사업1팀\",\n  \"sktManagerName\":\"manager1\",\n  \"sktManagerEmail\":\"xyz@xxx.com\",\n  \"cooperationTask\":\"수리\",\n  \"description\":\"additional description\"\n}"
 						},
 						"url": {
 							"raw": "{{url}}/api/tre/v1/company",
@@ -175,8 +173,7 @@
 								"v1",
 								"company"
 							]
-						},
-						"description": null
+						}
 					},
 					"response": []
 				},
@@ -214,7 +211,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"username\":\"test@packettest.com\",\"password\":\"test1234\"}"
+							"raw": "{\"username\":\"test@getvehicleinfo.com\",\"password\":\"test1234\"}"
 						},
 						"url": {
 							"raw": "{{url}}/api/auth/login",
@@ -226,8 +223,7 @@
 								"auth",
 								"login"
 							]
-						},
-						"description": null
+						}
 					},
 					"response": []
 				},
@@ -308,7 +304,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"vehicleNo\": \"91코3452\",\n  \"modelName\": \"그랜져\",\n  \"modelCode\": \"123\",\n  \"vendor\": \"현대자동차\",\n  \"modelYear\" : \"2017\",\n  \"missionType\" : \"AUTO\",\n  \"fuelType\" : \"DIESEL\",\n  \"mileage\": 10\n}"
+							"raw": "{\n  \"vehicleNo\": \"14모1589\",\n  \"modelName\": \"그랜져\",\n  \"modelCode\": \"123\",\n  \"vendor\": \"현대자동차\",\n  \"modelYear\" : \"2017\",\n  \"missionType\" : \"AUTO\",\n  \"fuelType\" : \"DIESEL\",\n  \"mileage\": 10\n}"
 						},
 						"url": {
 							"raw": "{{url}}/api/tre/v1/vehicle",
@@ -321,8 +317,7 @@
 								"v1",
 								"vehicle"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -419,18 +414,17 @@
 								"{{vehicleId}}",
 								"activate"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
 				{
-					"name": "센서 생성 OBD",
+					"name": "드라이버 생성",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "e0a269cf-ce09-4d9c-9d92-268c2f5a1083",
+								"id": "efab5101-2da7-45fa-8d12-34c5c0575606",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"status code is 200\", function(){",
@@ -452,7 +446,15 @@
 									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
 									"                }",
 									"            }",
-									"        }",
+									"        },",
+									"        \"phoneNo\":{",
+									"            \"type\": \"string\",",
+									"            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+									"        },",
+									"        \"email\":{",
+									"            \"type\": \"string\",",
+									"            \"pattern\":/^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}$/i",
+									"        },",
 									"    },",
 									"    ",
 									"    \"type\" : \"object\",",
@@ -460,19 +462,13 @@
 									"    \"properties\" : {",
 									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
 									"        \"createdTime\" : { \"type\" : \"integer\" },",
-									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
 									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
-									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
-									"        \"serialNo\" : { \"type\" : \"string\" },",
-									"        \"credentialsId\" : { \"type\" : \"string\" },",
-									"        \"vendor\" : { \"type\" : \"string\" },",
-									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
-									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
-									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
-									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
-									"        \"vehicleNo\": { \"type\" : [\"string\", \"null\"] },",
-									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
-									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
+									"        \"name\" : { \"type\" : \"string\" },",
+									"        \"authority\" : { \"type\" : \"string\" , \"enum\" : [ \"DIRECTOR\",\"DRIVER\",\"COMPANY_ADMIN\",\"SYSTEM_ADMIN\" ]},",
+									"        \"phone\" : { \"$ref\": \"#/definitions/phoneNo\" },",
+									"        \"email\" : { \"$ref\": \"#/definitions/email\"  },",
+									"        \"passwordUpdatedTime\" : { \"type\" : \"integer\" },",
+									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] }",
 									"    }",
 									"}",
 									"",
@@ -481,8 +477,8 @@
 									"});",
 									"console.log(\"Validation failed: \", tv4.error);",
 									"",
-									"postman.setEnvironmentVariable(\"sensorId2\", jsonData.id.id);",
-									"postman.setGlobalVariable(\"sensorId2\", jsonData.id.id);",
+									"",
+									"postman.setEnvironmentVariable(\"driverId\", jsonData.id.id);",
 									""
 								]
 							}
@@ -502,10 +498,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"serialNo\":\"{{credentialsIdOBD}}\",\n  \"vendor\": \"bbb\",\n  \"type\": \"OBD\",\n  \"credentialsId\":\"{{credentialsIdOBD}}\"\n}"
+							"raw": "{\n  \"name\":\"driver1\",\n  \"email\": \"driver1@getvehicleinfo.com\",\n  \"phone\": \"010-6247-1542\",\n  \"password\": \"test1234\"\n}"
 						},
 						"url": {
-							"raw": "{{url}}/api/tre/v1/sensor",
+							"raw": "{{url}}/api/tre/v1/driver",
 							"host": [
 								"{{url}}"
 							],
@@ -513,235 +509,25 @@
 								"api",
 								"tre",
 								"v1",
-								"sensor"
+								"driver"
 							]
-						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "센서 OBD 차량 부착",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "0063bb87-96e0-4826-baad-9c14d098ae36",
-								"type": "text/javascript",
-								"exec": [
-									"pm.test(\"status code is 200\", function(){",
-									"    pm.response.to.have.status(200);    ",
-									"});",
-									"",
-									"var jsonData = JSON.parse(responseBody);",
-									"",
-									"var schema = {",
-									"    ",
-									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
-									"    ",
-									"    \"definitions\" : {",
-									"        \"id\" : {",
-									"            \"type\" : \"object\",",
-									"            \"properties\" : {",
-									"                \"id\" : {",
-									"                    \"type\" : \"string\",",
-									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
-									"                }",
-									"            }",
-									"        }",
-									"    },",
-									"    ",
-									"    \"type\" : \"object\",",
-									"    ",
-									"    \"properties\" : {",
-									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
-									"        \"createdTime\" : { \"type\" : \"integer\" },",
-									"        \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
-									"        \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
-									"        \"directorId\" : { \"$ref\": \"#/definitions/id\" },",
-									"        \"serialNo\" : { \"type\" : \"string\" },",
-									"        \"vendor\" : { \"type\" : \"string\" },",
-									"        \"type\" : { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]},",
-									"        \"activationRequired\" : { \"type\" : [\"boolean\",\"null\"]},",
-									"        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] },",
-									"        \"status\" : { \"type\" : [\"string\", \"null\"] },",
-									"        \"vehicleNo\": { \"type\" : \"string\" },",
-									"        \"mdn\": { \"type\" : [\"string\", \"null\"] },",
-									"        \"nwStatus\": { \"type\" : [\"string\", \"null\"] }",
-									"    }",
-									"}",
-									"",
-									"pm.test('Schema is valid', function() {",
-									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
-									"});",
-									"console.log(tv4);",
-									"",
-									"var vehicleId = pm.variables.get(\"vehicleId\");",
-									"",
-									"pm.test(\"Valid vehicle Id\", function () {",
-									"    pm.expect(jsonData.vehicleId.id).to.equal(vehicleId);",
-									"});",
-									"",
-									""
-								]
-							}
 						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "X-Authorization",
-								"value": "Bearer {{token}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{url}}/api/tre/v1/sensor/{{sensorId2}}/vehicle/{{vehicleId}}",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"api",
-								"tre",
-								"v1",
-								"sensor",
-								"{{sensorId2}}",
-								"vehicle",
-								"{{vehicleId}}"
-							]
-						},
-						"description": null
 					},
 					"response": []
 				}
 			]
 		},
 		{
-			"name": "messagePack_multi 데이터 전송 - MQTT(수동)",
-			"description": "",
-			"item": []
-		},
-		{
-			"name": "Check",
+			"name": "Assign Driver",
 			"description": "",
 			"item": [
 				{
-					"name": "최신 트립 조회 - OBD",
+					"name": "차량에 드라이버를 할당",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"exec": [
-									"pm.test(\"status code is 200\", function(){",
-									"    pm.response.to.have.status(200);    ",
-									"});",
-									"",
-									"var jsonData = JSON.parse(responseBody);",
-									"",
-									"var schema = {",
-									"    ",
-									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
-									"    ",
-									"    \"definitions\" : {",
-									"        \"id\" : {",
-									"            \"type\" : \"object\",",
-									"            \"properties\" : {",
-									"                \"id\" : {",
-									"                    \"type\" : \"string\",",
-									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
-									"                }",
-									"            }",
-									"        },",
-									"        \"tripData\":{",
-									"            \"type\" : \"object\",",
-									"            \"properties\" : {",
-									"                \"id\" : { \"$ref\": \"#/definitions/id\" },",
-									"                \"createdTime\" : { \"type\" : \"integer\" },",
-									"                \"vehicleNo\" : { \"type\" : \"string\" },",
-									"                \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
-									"                \"userId\": { \"$ref\": \"#/definitions/id\" },",
-									"                \"startTs\": { \"type\": \"number\"},",
-									"                \"startDt\": { \"type\": \"string\" },",
-									"                \"endTs\": { \"type\": \"number\"},",
-									"                \"endDt\": { \"type\": [\"string\",\"null\"] },",
-									"                \"payload\": {\"type\": [\"object\" , \"null\"]},",
-									"                \"sensorId\": { \"$ref\": \"#/definitions/id\" },",
-									"                \"deviceType\": { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]}",
-									"            }",
-									"        }",
-									"    },",
-									"    ",
-									"    \"type\" : \"object\",",
-									"    \"$ref\": \"#/definitions/tripData\"",
-									"}",
-									"",
-									"pm.test('Schema is valid', function() {",
-									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
-									"});",
-									"console.log(\"Validation failed: \", tv4.error);",
-									"",
-									"pm.test('Device Types valid', function(){",
-									"     pm.expect(jsonData.deviceType).to.be.equal(\"OBD\");",
-									"});",
-									"",
-									"",
-									""
-								],
-								"id": "09d9c567-f64e-4b3f-ac13-bab736b6a8fb",
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Authorization",
-								"value": "Bearer {{token}}"
-							}
-						],
-						"body": {},
-						"url": {
-							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/trip/latest?deviceType=OBD",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"api",
-								"tre",
-								"v1",
-								"vehicle",
-								"{{vehicleId}}",
-								"trip",
-								"latest"
-							],
-							"query": [
-								{
-									"key": "deviceType",
-									"value": "OBD",
-									"equals": true
-								}
-							]
-						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "최신 마이크로트립 조회 - OBD",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "334cb1bc-df3f-4a35-aeaf-b58b39bda8d4",
+								"id": "40a957c9-08bb-40b1-a3f9-39f480eead28",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"status code is 200\", function(){",
@@ -763,24 +549,27 @@
 									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
 									"                }",
 									"            }",
-									"        },",
-									"        \"microTripData\":{",
-									"            \"type\" : \"object\",",
-									"            \"properties\" : {",
-									"                \"id\" : { \"$ref\": \"#/definitions/id\" },",
-									"                \"createdTime\" : { \"type\" : \"integer\" },",
-									"                \"tripId\" : { \"$ref\": \"#/definitions/id\" },",
-									"                \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
-									"                \"sensorId\": { \"$ref\": \"#/definitions/id\" },",
-									"                \"ts\": { \"type\": \"number\"},",
-									"                \"payload\": {\"type\": \"array\"},",
-									"                \"deviceType\": { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]}",
-									"            }",
 									"        }",
 									"    },",
 									"    ",
 									"    \"type\" : \"object\",",
-									"    \"$ref\": \"#/definitions/microTripData\"",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"category\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"usage\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"displacement\" : { \"type\" : [\"integer\",\"null\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
 									"}",
 									"",
 									"pm.test('Schema is valid', function() {",
@@ -788,8 +577,10 @@
 									"});",
 									"console.log(\"Validation failed: \", tv4.error);",
 									"",
-									"pm.test('Device Types valid', function(){",
-									"     pm.expect(jsonData.deviceType).to.be.equal(\"OBD\");",
+									"var driverId = pm.variables.get(\"driverId\");",
+									"",
+									"pm.test('Director set as currentDriverId', function(){",
+									"    pm.expect(jsonData.currentDriverId.id).to.be.equal(driverId);",
 									"});",
 									"",
 									"",
@@ -799,8 +590,12 @@
 						}
 					],
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
 							{
 								"key": "X-Authorization",
 								"value": "Bearer {{token}}"
@@ -808,7 +603,7 @@
 						],
 						"body": {},
 						"url": {
-							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/microtrip/latest?deviceType=OBD",
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/driver/{{driverId}}",
 							"host": [
 								"{{url}}"
 							],
@@ -818,18 +613,10 @@
 								"v1",
 								"vehicle",
 								"{{vehicleId}}",
-								"microtrip",
-								"latest"
-							],
-							"query": [
-								{
-									"key": "deviceType",
-									"value": "OBD",
-									"equals": true
-								}
+								"driver",
+								"{{driverId}}"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				}
@@ -838,7 +625,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "d52412df-2d42-47a5-901b-5798c1e6ea74",
+						"id": "997b40e0-96a3-4b9f-8eb4-ae6e1a35c570",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -848,7 +635,471 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "bbccddcc-5277-43b2-b54e-b59c1c4a63c5",
+						"id": "d2f3fb4c-11b8-441b-8b1a-e7c249ee1820",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Get Vehicle Info Success",
+			"description": "",
+			"item": [
+				{
+					"name": "Driver 로그인",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ad249a69-d1dd-40d0-9eb7-0f8dd30bca37",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"driver1@getvehicleinfo.com\",\"password\":\"test1234\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "차량 조회",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "54f02b84-baae-4403-bfcd-ba8b2b480d57",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"category\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"usage\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"displacement\" : { \"type\" : [\"integer\",\"null\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "436806a1-abd5-4aec-ab72-919f03caf46d",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "84c50076-5732-4107-8762-b213962ab8e7",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Unassign Driver",
+			"description": "",
+			"item": [
+				{
+					"name": "운영사 어드민 로그인",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c867b22a-fdaf-4755-9997-59d981bb768c",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"test@getvehicleinfo.com\",\"password\":\"test1234\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "차량에 드라이버해제",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "93cb6e6e-0fe4-4efc-a589-c8ee3bfbcb21",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var schema = {",
+									"    ",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+									"    ",
+									"    \"definitions\" : {",
+									"        \"id\" : {",
+									"            \"type\" : \"object\",",
+									"            \"properties\" : {",
+									"                \"id\" : {",
+									"                    \"type\" : \"string\",",
+									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                }",
+									"            }",
+									"        }",
+									"    },",
+									"    ",
+									"    \"type\" : \"object\",",
+									"    ",
+									"    \"properties\" : {",
+									"        \"id\" : { \"$ref\": \"#/definitions/id\" },",
+									"        \"createdTime\" : { \"type\" : \"integer\" },",
+									"        \"vehicleNo\" : { \"type\" : \"string\" },",
+									"        \"vendor\" : { \"type\" : \"string\" },",
+									"        \"modelCode\" : { \"type\" : \"string\" },",
+									"        \"modelName\" : { \"type\" : \"string\" },",
+									"        \"modelYear\" : { \"type\" : \"integer\" },",
+									"        \"missionType\" : { \"type\" : \"string\" , \"enum\" : [ \"AUTO\", \"MANUAL\" ]},",
+									"        \"fuelType\" : { \"type\" : \"string\" , \"enum\" : [ \"GASOLINE\", \"DIESEL\" ]},",
+									"        \"mileage\" : { \"type\" : \"integer\" },",
+									"        \"category\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"usage\" : { \"type\" : [\"string\", \"null\"] },",
+									"        \"displacement\" : { \"type\" : [\"integer\",\"null\"] },",
+									"        \"additionalInfo\" : { \"type\" : [\"string\", \"null\"] }",
+									"    }",
+									"}",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+									"});",
+									"console.log(\"Validation failed: \", tv4.error);",
+									"",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/driver/{{driverId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}",
+								"driver",
+								"{{driverId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "997b40e0-96a3-4b9f-8eb4-ae6e1a35c570",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d2f3fb4c-11b8-441b-8b1a-e7c249ee1820",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Get Vehicle Info Fail",
+			"description": "",
+			"item": [
+				{
+					"name": "Driver 로그인",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ad249a69-d1dd-40d0-9eb7-0f8dd30bca37",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 200\", function(){",
+									"    pm.response.to.have.status(200);    ",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);",
+									"",
+									"",
+									"postman.setGlobalVariable(\"token\", jsonData.token);",
+									"postman.setGlobalVariable(\"refreshToken\", jsonData.refreshToken);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"driver1@getvehicleinfo.com\",\"password\":\"test1234\"}"
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "차량 조회",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f85756ea-52ac-409e-afaf-80d98b66be8f",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"status code is 403\", function(){",
+									"    pm.response.to.have.status(403);    ",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tre",
+								"v1",
+								"vehicle",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "436806a1-abd5-4aec-ab72-919f03caf46d",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "84c50076-5732-4107-8762-b213962ab8e7",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -908,8 +1159,7 @@
 								"auth",
 								"login"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -958,12 +1208,33 @@
 								"company",
 								"{{companyId}}"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "5fd3f228-a204-4fe8-9d9f-ac72b2d52fa4",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "815f79ac-9ccb-4c9e-b956-fc562c7a9e49",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }

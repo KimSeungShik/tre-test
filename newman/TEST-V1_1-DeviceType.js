@@ -64,7 +64,7 @@ function step1_setup(callback){
     const options = makeNewmanOption(null, 'Setup');
 
     newman.run(options,function(err,output){
-        callback(null,{environment:output.environment});
+      callback(null,{environment:output.environment});
     });
 }
 
@@ -72,7 +72,16 @@ function step2_prepareDirectorTrip(args, callback){
     const options = makeNewmanOption(args.environment, 'Prepare Director Trip');
 
     newman.run(options,function(err,output){
-        callback(null,{environment:output.environment});
+      // console.log("---output4", output.environment.values.reference.credentialsIdGPS.value);
+      const environment = output.environment.values.reference;
+      var credentials = {
+        credentialsIdGPS: environment.credentialsIdGPS.value,
+        credentialsIdOBD: environment.credentialsIdOBD.value,
+        credentialsIdADAS: environment.credentialsIdADAS.value,
+        credentialsIdBLACKBOX: environment.credentialsIdBLACKBOX.value,
+      }
+
+      callback(null,{environment:output.environment, credentials:credentials});
     });
 }
 
@@ -82,7 +91,8 @@ function sendTrips(args, callback){
     const mqttArg = {
         host: config.mqttHost,
         port: config.mqttPort,
-        protocol: config.mqttProtocol
+        protocol: config.mqttProtocol,
+        credentials: args.credentials
     }
 
     async.parallel({
@@ -153,7 +163,14 @@ function step5_prepareDriverTrip(args, callback){
     const options = makeNewmanOption(args.environment, 'Prepare Driver Trip');
 
     newman.run(options,function(err,output){
-        callback(null,{environment:output.environment});
+      const environment = output.environment.values.reference;
+      var credentials = {
+        credentialsIdGPS: environment.credentialsIdGPS.value,
+        credentialsIdOBD: environment.credentialsIdOBD.value,
+        credentialsIdADAS: environment.credentialsIdADAS.value,
+        credentialsIdBLACKBOX: environment.credentialsIdBLACKBOX.value,
+      }
+      callback(null,{environment:output.environment, credentials:credentials});
     });
 }
 

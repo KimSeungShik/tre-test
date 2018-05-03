@@ -54,7 +54,14 @@ function step1_setup(callback){
     const options = makeNewmanOption(null, 'Setup');
 
     newman.run(options,function(err,output){
-        callback(null,{environment:output.environment});
+      const environment = output.environment.values.reference;
+      var credentials = {
+        credentialsIdGPS: environment.credentialsIdGPS.value,
+        credentialsIdOBD: environment.credentialsIdOBD.value,
+        credentialsIdADAS: environment.credentialsIdADAS.value,
+        credentialsIdBLACKBOX: environment.credentialsIdBLACKBOX.value,
+      }
+      callback(null,{environment:output.environment, credentials:credentials});
     });
 }
 
@@ -62,7 +69,8 @@ function step2_sendEvents(args, callback){
     const mqttArg = {
         host: config.mqttHost,
         port: config.mqttPort,
-        protocol: config.mqttProtocol
+        protocol: config.mqttProtocol,
+        credentials: args.credentials
     }
 
     async.parallel({

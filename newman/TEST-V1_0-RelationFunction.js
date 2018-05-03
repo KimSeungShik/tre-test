@@ -1,7 +1,7 @@
 const newman = require('newman');
 const fs = require('fs');
 
-const testFilePrefix = 'TEST-V1_1-MaintainFunction';
+const testFilePrefix = 'TEST-V1_0-RelationFunction';
 if(process.argv.length !== 3) {
     console.log("[Usage] node [testFileName.js] [envFileName.json]");
     console.log("[Example] node ./" + testFilePrefix + ".js env.dev.json");

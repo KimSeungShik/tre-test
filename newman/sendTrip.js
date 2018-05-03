@@ -1,11 +1,6 @@
 var mqtt = require('mqtt');
 var msgpack = require("msgpack-lite");
 
-const GPS_ACCESS_TOKEN = "XYZ12222333344445557";
-const OBD_ACCESS_TOKEN = "XYZ12222333344445555";
-const ADAS_ACCESS_TOKEN = "XYZ12222333344445556";
-const BLACKBOX_ACCESS_TOKEN = "XYZ12222333344445558";
-
 const GPS_MICROTRIP_TY = 2;
 const OBD_MICROTRIP_TY = 4;
 const ADAS_MICROTRIP_TY = 6;
@@ -170,7 +165,7 @@ function sendGPS (args, callback){
   const gpsClient = mqtt.connect({
     host: args.host,
     port: args.port,
-    username: GPS_ACCESS_TOKEN,
+    username: args.credentials.credentialsIdGPS,
     clean: true,
     keepalive: 60,
     rejectUnauthorized: true,
@@ -187,7 +182,7 @@ function sendOBD (args, callback){
   const obdClient = mqtt.connect({
     host: args.host,
     port: args.port,
-    username: OBD_ACCESS_TOKEN,
+    username: args.credentials.credentialsIdOBD,
     clean: true,
     keepalive: 60,
     rejectUnauthorized: true,
@@ -204,7 +199,7 @@ function sendADAS (args, callback){
   const adasClient = mqtt.connect({
     host: args.host,
     port: args.port,
-    username: ADAS_ACCESS_TOKEN,
+    username: args.credentials.credentialsIdADAS,
     clean: true,
     keepalive: 60,
     rejectUnauthorized: true,
@@ -221,7 +216,7 @@ function sendBLACKBOX (args, callback){
   const blacboxClient = mqtt.connect({
     host: args.host,
     port: args.port,
-    username: BLACKBOX_ACCESS_TOKEN,
+    username: args.credentials.credentialsIdBLACKBOX,
     clean: true,
     keepalive: 60,
     rejectUnauthorized: true,
@@ -238,7 +233,7 @@ function sendMpObdMicrotrip(args, callback){
   const obdClient = mqtt.connect({
     host: args.host,
     port: args.port,
-    username: OBD_ACCESS_TOKEN,
+    username: args.credentials.credentialsIdOBD,
     clean: true,
     keepalive: 60,
     rejectUnauthorized: true,

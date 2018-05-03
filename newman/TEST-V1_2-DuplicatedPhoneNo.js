@@ -1,7 +1,8 @@
 const newman = require('newman');
 const fs = require('fs');
 
-const testFilePrefix = 'TEST-V1_1-MaintainFunction';
+const testFilePrefix = 'TEST-V1_2-DuplicatedPhoneNo';
+
 if(process.argv.length !== 3) {
     console.log("[Usage] node [testFileName.js] [envFileName.json]");
     console.log("[Example] node ./" + testFilePrefix + ".js env.dev.json");
@@ -16,7 +17,7 @@ let step = 0;
 
 const defaultNewmanOptions = {
     collection: require('../postman/' + testFilePrefix + '.json'),
-    delayRequest: 300,
+    delayRequest: 100,
     reporters: ['cli'],
     environment: {
       "id": "09d8e204-ac83-8de2-809d-6c5b85c828c3",

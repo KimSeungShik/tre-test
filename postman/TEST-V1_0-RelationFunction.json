@@ -1,0 +1,3133 @@
+{
+  "info": {
+    "_postman_id": "717d2efd-7283-8692-b4c2-c3a67049b519",
+    "name": "TEST-V1.0-RelationFunction",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "0. 초기화 - 시스템 어드민",
+      "description": "",
+      "item": [
+        {
+          "name": "0.1 로그인",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "e803eb60-3df6-43c1-8500-c54c13548c7b",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "// set response time - milliseconds",
+                  "postman.setEnvironmentVariable(\"resTime\", 1000 );",
+                  "postman.setEnvironmentVariable(\"resContentType\", \"Content-Type\");",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+                  "tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "var schema = {",
+                  "    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+                  "",
+                  "    \"type\" : \"object\",",
+                  "    \"required\" : [ \"token\", \"refreshToken\" ],",
+                  "    \"properties\" : {",
+                  "        \"token\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        ",
+                  "        \"refreshToken\" : {",
+                  "            \"type\" : \"string\"",
+                  "        }",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Schema is valid', function() { pm.expect(tv4.validate(jsonData, schema)).to.be.true; });",
+                  "",
+                  "postman.setEnvironmentVariable(\"token\", jsonData.token);",
+                  "postman.setGlobalVariable(\"token\", jsonData.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"admin@smartfleet.sktelecom.com\",\"password\":\"smart2017.123$\"}"
+            },
+            "url": {
+              "raw": "{{url}}/api/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "0.2 운영사 생성",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "c4016806-1635-46e0-993c-c169a514dcf6",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\"); ",
+                  "tests[\"Content-Type header is set\"] = postman.getResponseHeader(\"Content-Type\");",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "var schema = {",
+                  "    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+                  "    ",
+                  "    \"definitions\" : {",
+                  "        \"id\" : {",
+                  "            \"type\" : \"object\",",
+                  "            \"properties\" : {",
+                  "                \"id\" : {",
+                  "                    \"type\" : \"string\",",
+                  "                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+                  "                }",
+                  "            }",
+                  "        },",
+                  "        \"email\" : {",
+                  "            \"type\": \"string\", ",
+                  "            \"format\": \"email\" ",
+                  "        },",
+                  "        \"phoneNo\": { ",
+                  "            \"type\": \"string\",",
+                  "            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+                  "        }",
+                  "    },",
+                  "    \"type\" : \"object\",",
+                  "    \"required\" : [ \"id\", \"createdTime\", \"name\", \"master\", \"masterId\", \"picPasswd\", \"picName\", \"picPhone\", \"picEmail\", \"picDivision\", \"sktManagerName\", \"sktManagerEmail\", \"cooperationTask\", \"notifyErrIdleMin\"],",
+                  "    \"properties\" : {",
+                  "        \"id\" : {",
+                  "            \"$ref\": \"#/definitions/id\" ",
+                  "        },",
+                  "        \"createdTime\" : {",
+                  "            \"type\" : \"number\"",
+                  "        },",
+                  "        \"name\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"master\" : {",
+                  "            \"type\" : \"boolean\",",
+                  "            \"default\" : true",
+                  "        },",
+                  "        \"masterId\" : { ",
+                  "            \"$ref\": \"#/definitions/id\" ",
+                  "        },",
+                  "       \"picPasswd\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"picName\" : {",
+                  "            \"type\" : \"string\"",
+                  "        }, ",
+                  "        \"picPhone\" : {",
+                  "            \"$ref\": \"#/definitions/phoneNo\" ",
+                  "        },",
+                  "        \"picEmail\" : {",
+                  "            \"$ref\": \"#/definitions/email\" ",
+                  "        },",
+                  "        \"picDivision\" :{",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"sktManagerName\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"sktManagerEmail\" : {",
+                  "            \"$ref\": \"#/definitions/email\" ",
+                  "        },",
+                  "        \"cooperationTask\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"description\" : {",
+                  "            \"type\" : \"string\"",
+                  "        }, ",
+                  "        \"notifyErrIdleMin\" : {",
+                  "            \"type\" : \"number\"",
+                  "        }",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Schema is valid', function() { pm.expect(tv4.validate(jsonData, schema)).to.be.true; });",
+                  "",
+                  "postman.setEnvironmentVariable(\"companyId1\", jsonData.id.id);",
+                  "postman.setGlobalVariable(\"companyId1\", jsonData.id.id);",
+                  "",
+                  "postman.setEnvironmentVariable(\"tokenPrefix\", jsonData.tokenPrefix);",
+                  "postman.setGlobalVariable(\"tokenPrefix\", jsonData.tokenPrefix);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\":\"운영사생성1\",\n  \"serviceType\":\"createOperation1\", \n  \"picName\":\"운영사생성1\", \n  \"picEmail\":\"operation1@uangel.com\", \n  \"picPhone\":\"010-5555-7777\",\n  \"picPasswd\":\"pwdOperation\",\n  \"picDivision\":\"운셩사1팀\",\n  \"sktManagerName\":\"sktmanager999999\",\n  \"sktManagerEmail\":\"sktmanager999999@skt.com\",\n  \"cooperationTask\":\"테스트\",\n  \"description\":\"description\",\n  \"notifyHost\":\"http://121.111.111.111:1111/\",\n  \"notifyMsgType\":\"0f\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "0.3 회사정보 조회",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "e81fa8e4-718d-41e7-a04a-9342a5b3240d",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+                  "tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "var schema = {",
+                  "   \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+                  "",
+                  "   \"definitions\" : {",
+                  "        \"id\" : {",
+                  "            \"type\" : \"object\",",
+                  "            \"properties\" : {",
+                  "                \"id\" : {",
+                  "                    \"type\" : \"string\",",
+                  "                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+                  "                }",
+                  "            }",
+                  "        },",
+                  "        \"email\" : {",
+                  "            \"type\": \"string\", ",
+                  "            \"format\": \"email\" ",
+                  "        },",
+                  "        \"phone\": { ",
+                  "            \"type\": \"string\", ",
+                  "            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+                  "        }",
+                  "    },",
+                  "",
+                  "   \"definitionCompany\" : {",
+                  "       ",
+                  "       \"list\" : {",
+                  "           \"type\" : \"object\",",
+                  "            ",
+                  "            \"required\" : [ \"id\", \"createdTime\", \"name\", \"master\", \"masterId\", \"picPasswd\", \"picName\", \"picPhone\", \"picEmail\", \"picDivision\", \"sktManagerName\", \"sktManagerEmail\", \"cooperationTask\", \"notifyErrIdleMin\"],",
+                  "",
+                  "            \"properties\" : {",
+                  "                \"id\" : {",
+                  "                    \"$ref\": \"#/definitions/id\" ",
+                  "                },",
+                  "                \"createdTime\" : {",
+                  "                    \"type\" : \"number\"",
+                  "                },",
+                  "                \"name\" : {",
+                  "                    \"type\" : \"string\"",
+                  "                },",
+                  "                \"master\" : {",
+                  "                    \"type\" : \"boolean\",",
+                  "                    \"default\" : true",
+                  "                },",
+                  "                \"masterId\" : { ",
+                  "                    \"$ref\": \"#/definitions/id\" ",
+                  "                },",
+                  "               \"picPasswd\" : {",
+                  "                    \"type\" : \"string\"",
+                  "                },",
+                  "                \"picName\" : {",
+                  "                    \"type\" : \"string\"",
+                  "                }, ",
+                  "                \"picPhone\" : {",
+                  "                    \"$ref\": \"#/definitions/phone\" ",
+                  "                },",
+                  "                \"picEmail\" : {",
+                  "                    \"$ref\": \"#/definitions/email\" ",
+                  "                },",
+                  "                \"picDivision\" :{",
+                  "                    \"type\" : \"string\"",
+                  "                },",
+                  "                \"sktManagerName\" : {",
+                  "                    \"type\" : \"string\"",
+                  "                },",
+                  "                \"sktManagerEmail\" : {",
+                  "                    \"$ref\": \"#/definitions/email\" ",
+                  "                },",
+                  "                \"cooperationTask\" : {",
+                  "                    \"type\" : \"string\"",
+                  "                },",
+                  "                \"description\" : {",
+                  "                    \"type\" : \"string\"",
+                  "                }, ",
+                  "                \"notifyErrIdleMin\" : {",
+                  "                    \"type\" : \"number\"",
+                  "                }",
+                  "            }",
+                  "        }",
+                  "    } ,",
+                  "",
+                  "    \"type\" : \"object\",",
+                  "    \"required\" : [ \"data\"],",
+                  "",
+                  "    \"properties\" : {",
+                  "        \"data\" : [{",
+                  "            \"$ref\" : \"#/definitionCompany/list\" ",
+                  "            } ]",
+                  "    }",
+                  "}",
+                  "",
+                  "tests[\"Valid scehma\"] = tv4.validate(jsonData, schema);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{url}}/api/tre/v1/companies/all?limit=30",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "companies",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "30"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "805ac5e9-1539-478d-881d-08237e7ef9c5",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "d164bcb0-13ac-4466-9600-b35bc318d9d7",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. 초기화 - 운영사 어드민",
+      "description": "",
+      "item": [
+        {
+          "name": "1.1 운영사 로그인",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "9637f925-d03f-4c07-a39c-24c2aba0c21a",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+                  "tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "var schema = {",
+                  "    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+                  "",
+                  "    \"type\" : \"object\",",
+                  "    \"required\" : [ \"token\", \"refreshToken\" ],",
+                  "    \"properties\" : {",
+                  "        \"token\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        ",
+                  "        \"refreshToken\" : {",
+                  "            \"type\" : \"string\"",
+                  "        }",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Schema is valid', function() {",
+                  "    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+                  "});",
+                  "",
+                  "postman.setGlobalVariable(\"tokenMA\", jsonData.token);",
+                  "postman.setGlobalVariable(\"refreshTokenMA\", jsonData.refreshToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"operation1@uangel.com\",\"password\":\"pwdOperation\"}"
+            },
+            "url": {
+              "raw": "{{url}}/api/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1.2 디렉터 생성",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "d8ee6c93-43f6-48ce-9d42-609bb801770f",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+                  "tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "var schema = {",
+                  "    ",
+                  "    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+                  "    ",
+                  "    \"definitions\" : {",
+                  "        \"id\" : {",
+                  "            \"type\" : \"object\",",
+                  "            \"properties\" : {",
+                  "                \"id\" : {",
+                  "                    \"type\" : \"string\",",
+                  "                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+                  "                }",
+                  "            }",
+                  "        },",
+                  "        \"phoneNo\":{",
+                  "            \"type\": \"string\",",
+                  "            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+                  "        },",
+                  "        \"email\":{",
+                  "            \"type\": \"string\",",
+                  "            \"format\": \"email\" ",
+                  "        },",
+                  "    },",
+                  "    ",
+                  "    \"type\" : \"object\",",
+                  "    ",
+                  "    \"properties\" : {",
+                  "        \"id\" : { ",
+                  "            \"$ref\": \"#/definitions/id\" ",
+                  "        },",
+                  "        \"createdTime\" : { ",
+                  "            \"type\" : \"integer\" ",
+                  "        },",
+                  "        \"companyId\" : {",
+                  "            \"$ref\": \"#/definitions/id\" ",
+                  "        },",
+                  "        \"name\" : { ",
+                  "            \"type\" : \"string\" ",
+                  "        },",
+                  "        \"authority\" : { ",
+                  "            \"type\" : \"string\" , \"enum\" : [\"DIRECTOR\"]",
+                  "        },",
+                  "        \"phone\" : { ",
+                  "            \"$ref\": \"#/definitions/phoneNo\" ",
+                  "        },",
+                  "        \"email\" : { ",
+                  "            \"$ref\": \"#/definitions/email\"  ",
+                  "        },",
+                  "        \"passwordUpdatedTime\" : { \"type\" : \"integer\" },",
+                  "        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] }",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Schema is valid', function() {",
+                  "    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+                  "});",
+                  "",
+                  "postman.setEnvironmentVariable(\"directorId\", jsonData.id.id);",
+                  "postman.setGlobalVariable(\"directorId\", jsonData.id.id);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\":\"디렉터생성1\",\n  \"email\": \"createDirector@uangel.com\",\n  \"phone\": \"011-7890-7890\",\n  \"password\": \"uangel123\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/director",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "director"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1.3 디렉터 로그인",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "3f727384-eb82-44fa-9e56-6ce4c59fe230",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+                  "tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "var schema = {",
+                  "    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+                  "",
+                  "    \"type\" : \"object\",",
+                  "    \"required\" : [ \"token\", \"refreshToken\" ],",
+                  "    \"properties\" : {",
+                  "        \"token\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        ",
+                  "        \"refreshToken\" : {",
+                  "            \"type\" : \"string\"",
+                  "        }",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Schema is valid', function() {",
+                  "    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+                  "});",
+                  "",
+                  "postman.setGlobalVariable(\"tokenDIRECTOR\", jsonData.token);",
+                  "postman.setGlobalVariable(\"refreshTokenDIRECTOR\", jsonData.refreshToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"createDirector@uangel.com\",\"password\":\"uangel123\"}"
+            },
+            "url": {
+              "raw": "{{url}}/api/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1.4-1 협력사 생성1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "8778934f-2d5c-4623-b208-a5952f47889f",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\"); ",
+                  "tests[\"Content-Type header is set\"] = postman.getResponseHeader(\"Content-Type\");",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "var schema = {",
+                  "    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+                  "    ",
+                  "    \"definitions\" : {",
+                  "        \"id\" : {",
+                  "            \"type\" : \"object\",",
+                  "            \"properties\" : {",
+                  "                \"id\" : {",
+                  "                    \"type\" : \"string\",",
+                  "                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+                  "                }",
+                  "            }",
+                  "        },",
+                  "        \"email\" : {",
+                  "            \"type\": \"string\", ",
+                  "            \"format\": \"email\" ",
+                  "        },",
+                  "        \"phoneNo\": { ",
+                  "            \"type\": \"string\",",
+                  "            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+                  "        }",
+                  "    },",
+                  "    \"type\" : \"object\",",
+                  "    \"required\" : [ \"id\", \"createdTime\", \"name\", \"master\", \"masterId\", \"picPasswd\", \"picName\", \"picPhone\", \"picEmail\", \"picDivision\", \"sktManagerName\", \"sktManagerEmail\", \"cooperationTask\", \"notifyErrIdleMin\"],",
+                  "    \"properties\" : {",
+                  "        \"id\" : {",
+                  "            \"$ref\": \"#/definitions/id\" ",
+                  "        },",
+                  "        \"createdTime\" : {",
+                  "            \"type\" : \"number\"",
+                  "        },",
+                  "        \"name\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"master\" : {",
+                  "            \"type\" : \"boolean\",",
+                  "            \"default\" : true",
+                  "        },",
+                  "        \"masterId\" : { ",
+                  "            \"$ref\": \"#/definitions/id\" ",
+                  "        },",
+                  "       \"picPasswd\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"picName\" : {",
+                  "            \"type\" : \"string\"",
+                  "        }, ",
+                  "        \"picPhone\" : {",
+                  "            \"$ref\": \"#/definitions/phoneNo\" ",
+                  "        },",
+                  "        \"picEmail\" : {",
+                  "            \"$ref\": \"#/definitions/email\" ",
+                  "        },",
+                  "        \"picDivision\" :{",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"sktManagerName\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"sktManagerEmail\" : {",
+                  "            \"$ref\": \"#/definitions/email\" ",
+                  "        },",
+                  "        \"cooperationTask\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"description\" : {",
+                  "            \"type\" : \"string\"",
+                  "        }, ",
+                  "        \"notifyErrIdleMin\" : {",
+                  "            \"type\" : \"number\"",
+                  "        }",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Schema is valid', function() { pm.expect(tv4.validate(jsonData, schema)).to.be.true; });",
+                  "",
+                  "postman.setEnvironmentVariable(\"co-companyId1\", jsonData.id.id);",
+                  "postman.setGlobalVariable(\"co-companyId1\", jsonData.id.id);",
+                  "",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\":\"협력사생성1\",\n  \"serviceType\":\"createOperation1\", \n  \"picName\":\"협력사생성1\", \n  \"picEmail\":\"co-operation1@uangel.com\", \n  \"picPhone\":\"010-5225-7777\",\n  \"picPasswd\":\"co-pwdOperation\",\n  \"picDivision\":\"협력사111\",\n  \"sktManagerName\":\"sktmanager999999\",\n  \"sktManagerEmail\":\"sktmanager999999@skt.com\",\n  \"cooperationTask\":\"테스트\",\n  \"description\":\"description\",\n  \"notifyHost\":\"http://121.111.111.111:1111/\",\n  \"notifyMsgType\":\"0f\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1.4-2 협력사 생성2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "ee8756e3-028a-4f5d-9138-efeac2bc719d",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\"); ",
+                  "tests[\"Content-Type header is set\"] = postman.getResponseHeader(\"Content-Type\");",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "var schema = {",
+                  "    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+                  "    ",
+                  "    \"definitions\" : {",
+                  "        \"id\" : {",
+                  "            \"type\" : \"object\",",
+                  "            \"properties\" : {",
+                  "                \"id\" : {",
+                  "                    \"type\" : \"string\",",
+                  "                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+                  "                }",
+                  "            }",
+                  "        },",
+                  "        \"email\" : {",
+                  "            \"type\": \"string\", ",
+                  "            \"format\": \"email\" ",
+                  "        },",
+                  "        \"phoneNo\": { ",
+                  "            \"type\": \"string\",",
+                  "            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+                  "        }",
+                  "    },",
+                  "    \"type\" : \"object\",",
+                  "    \"required\" : [ \"id\", \"createdTime\", \"name\", \"master\", \"masterId\", \"picPasswd\", \"picName\", \"picPhone\", \"picEmail\", \"picDivision\", \"sktManagerName\", \"sktManagerEmail\", \"cooperationTask\", \"notifyErrIdleMin\"],",
+                  "    \"properties\" : {",
+                  "        \"id\" : {",
+                  "            \"$ref\": \"#/definitions/id\" ",
+                  "        },",
+                  "        \"createdTime\" : {",
+                  "            \"type\" : \"number\"",
+                  "        },",
+                  "        \"name\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"master\" : {",
+                  "            \"type\" : \"boolean\",",
+                  "            \"default\" : true",
+                  "        },",
+                  "        \"masterId\" : { ",
+                  "            \"$ref\": \"#/definitions/id\" ",
+                  "        },",
+                  "       \"picPasswd\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"picName\" : {",
+                  "            \"type\" : \"string\"",
+                  "        }, ",
+                  "        \"picPhone\" : {",
+                  "            \"$ref\": \"#/definitions/phoneNo\" ",
+                  "        },",
+                  "        \"picEmail\" : {",
+                  "            \"$ref\": \"#/definitions/email\" ",
+                  "        },",
+                  "        \"picDivision\" :{",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"sktManagerName\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"sktManagerEmail\" : {",
+                  "            \"$ref\": \"#/definitions/email\" ",
+                  "        },",
+                  "        \"cooperationTask\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"description\" : {",
+                  "            \"type\" : \"string\"",
+                  "        }, ",
+                  "        \"notifyErrIdleMin\" : {",
+                  "            \"type\" : \"number\"",
+                  "        }",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Schema is valid', function() { pm.expect(tv4.validate(jsonData, schema)).to.be.true; });",
+                  "",
+                  "postman.setEnvironmentVariable(\"co-companyId2\", jsonData.id.id);",
+                  "postman.setGlobalVariable(\"co-companyId2\", jsonData.id.id);",
+                  "",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\":\"coop\",\n  \"serviceType\":\"createOperation1\", \n  \"picName\":\"협력사생성2\", \n  \"picEmail\":\"co-operation2@uangel.com\", \n  \"picPhone\":\"012-5225-7727\",\n  \"picPasswd\":\"co-pwdOperation\",\n  \"picDivision\":\"협력사222\",\n  \"sktManagerName\":\"sktmanager999999\",\n  \"sktManagerEmail\":\"sktmanager999999@skt.com\",\n  \"cooperationTask\":\"테스트\",\n  \"description\":\"description\",\n  \"notifyHost\":\"http://121.111.111.111:1111/\",\n  \"notifyMsgType\":\"0f\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1.4-3 협력사 생성3",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "9586ed99-2a2d-4c29-86b9-e1515fea5032",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\"); ",
+                  "tests[\"Content-Type header is set\"] = postman.getResponseHeader(\"Content-Type\");",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "var schema = {",
+                  "    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+                  "    ",
+                  "    \"definitions\" : {",
+                  "        \"id\" : {",
+                  "            \"type\" : \"object\",",
+                  "            \"properties\" : {",
+                  "                \"id\" : {",
+                  "                    \"type\" : \"string\",",
+                  "                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+                  "                }",
+                  "            }",
+                  "        },",
+                  "        \"email\" : {",
+                  "            \"type\": \"string\", ",
+                  "            \"format\": \"email\" ",
+                  "        },",
+                  "        \"phoneNo\": { ",
+                  "            \"type\": \"string\",",
+                  "            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+                  "        }",
+                  "    },",
+                  "    \"type\" : \"object\",",
+                  "    \"required\" : [ \"id\", \"createdTime\", \"name\", \"master\", \"masterId\", \"picPasswd\", \"picName\", \"picPhone\", \"picEmail\", \"picDivision\", \"sktManagerName\", \"sktManagerEmail\", \"cooperationTask\", \"notifyErrIdleMin\"],",
+                  "    \"properties\" : {",
+                  "        \"id\" : {",
+                  "            \"$ref\": \"#/definitions/id\" ",
+                  "        },",
+                  "        \"createdTime\" : {",
+                  "            \"type\" : \"number\"",
+                  "        },",
+                  "        \"name\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"master\" : {",
+                  "            \"type\" : \"boolean\",",
+                  "            \"default\" : true",
+                  "        },",
+                  "        \"masterId\" : { ",
+                  "            \"$ref\": \"#/definitions/id\" ",
+                  "        },",
+                  "       \"picPasswd\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"picName\" : {",
+                  "            \"type\" : \"string\"",
+                  "        }, ",
+                  "        \"picPhone\" : {",
+                  "            \"$ref\": \"#/definitions/phoneNo\" ",
+                  "        },",
+                  "        \"picEmail\" : {",
+                  "            \"$ref\": \"#/definitions/email\" ",
+                  "        },",
+                  "        \"picDivision\" :{",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"sktManagerName\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"sktManagerEmail\" : {",
+                  "            \"$ref\": \"#/definitions/email\" ",
+                  "        },",
+                  "        \"cooperationTask\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"description\" : {",
+                  "            \"type\" : \"string\"",
+                  "        }, ",
+                  "        \"notifyErrIdleMin\" : {",
+                  "            \"type\" : \"number\"",
+                  "        }",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Schema is valid', function() { pm.expect(tv4.validate(jsonData, schema)).to.be.true; });",
+                  "",
+                  "postman.setEnvironmentVariable(\"co-companyId3\", jsonData.id.id);",
+                  "postman.setGlobalVariable(\"co-companyId3\", jsonData.id.id);",
+                  "",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\":\"corp3\",\n  \"serviceType\":\"createOperation1\", \n  \"picName\":\"협력사생성3\", \n  \"picEmail\":\"co-operation3@uangel.com\", \n  \"picPhone\":\"011-3225-7733\",\n  \"picPasswd\":\"co-pwdOperation\",\n  \"picDivision\":\"협력사333\",\n  \"sktManagerName\":\"sktmanager999999\",\n  \"sktManagerEmail\":\"sktmanager999999@skt.com\",\n  \"cooperationTask\":\"테스트\",\n  \"description\":\"description\",\n  \"notifyHost\":\"http://121.111.111.111:1111/\",\n  \"notifyMsgType\":\"0f\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1.4-4 협력사 생성4",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "5bce928d-a557-4a00-948c-bc48cabe2d2f",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\"); ",
+                  "tests[\"Content-Type header is set\"] = postman.getResponseHeader(\"Content-Type\");",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "var schema = {",
+                  "    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+                  "    ",
+                  "    \"definitions\" : {",
+                  "        \"id\" : {",
+                  "            \"type\" : \"object\",",
+                  "            \"properties\" : {",
+                  "                \"id\" : {",
+                  "                    \"type\" : \"string\",",
+                  "                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+                  "                }",
+                  "            }",
+                  "        },",
+                  "        \"email\" : {",
+                  "            \"type\": \"string\", ",
+                  "            \"format\": \"email\" ",
+                  "        },",
+                  "        \"phoneNo\": { ",
+                  "            \"type\": \"string\",",
+                  "            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+                  "        }",
+                  "    },",
+                  "    \"type\" : \"object\",",
+                  "    \"required\" : [ \"id\", \"createdTime\", \"name\", \"master\", \"masterId\", \"picPasswd\", \"picName\", \"picPhone\", \"picEmail\", \"picDivision\", \"sktManagerName\", \"sktManagerEmail\", \"cooperationTask\", \"notifyErrIdleMin\"],",
+                  "    \"properties\" : {",
+                  "        \"id\" : {",
+                  "            \"$ref\": \"#/definitions/id\" ",
+                  "        },",
+                  "        \"createdTime\" : {",
+                  "            \"type\" : \"number\"",
+                  "        },",
+                  "        \"name\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"master\" : {",
+                  "            \"type\" : \"boolean\",",
+                  "            \"default\" : true",
+                  "        },",
+                  "        \"masterId\" : { ",
+                  "            \"$ref\": \"#/definitions/id\" ",
+                  "        },",
+                  "       \"picPasswd\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"picName\" : {",
+                  "            \"type\" : \"string\"",
+                  "        }, ",
+                  "        \"picPhone\" : {",
+                  "            \"$ref\": \"#/definitions/phoneNo\" ",
+                  "        },",
+                  "        \"picEmail\" : {",
+                  "            \"$ref\": \"#/definitions/email\" ",
+                  "        },",
+                  "        \"picDivision\" :{",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"sktManagerName\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"sktManagerEmail\" : {",
+                  "            \"$ref\": \"#/definitions/email\" ",
+                  "        },",
+                  "        \"cooperationTask\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        \"description\" : {",
+                  "            \"type\" : \"string\"",
+                  "        }, ",
+                  "        \"notifyErrIdleMin\" : {",
+                  "            \"type\" : \"number\"",
+                  "        }",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Schema is valid', function() { pm.expect(tv4.validate(jsonData, schema)).to.be.true; });",
+                  "",
+                  "postman.setEnvironmentVariable(\"co-companyId4\", jsonData.id.id);",
+                  "postman.setGlobalVariable(\"co-companyId4\", jsonData.id.id);",
+                  "",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\":\"sk\",\n  \"serviceType\":\"createOperation1\", \n  \"picName\":\"협력사생성4\", \n  \"picEmail\":\"co-operation4@uangel.com\", \n  \"picPhone\":\"010-4225-7444\",\n  \"picPasswd\":\"co-pwdOperation4\",\n  \"picDivision\":\"협력사444\",\n  \"sktManagerName\":\"sktmanager999999\",\n  \"sktManagerEmail\":\"sktmanager999999@skt.com\",\n  \"cooperationTask\":\"테스트\",\n  \"description\":\"description\",\n  \"notifyHost\":\"http://121.111.111.111:1111/\",\n  \"notifyMsgType\":\"0f\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "7d945dba-0c32-403f-a0ee-605f14e1fd0d",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "175d5a42-5d21-4c85-bede-b59640c4ad57",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. 차량 생성 및 조회 - 운영사 어드민",
+      "description": "",
+      "item": [
+        {
+          "name": "2.1-1 차량 생성",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  "",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "postman.setEnvironmentVariable(\"vehicleId\", jsonData.id.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleNo\": \"22가3923\",\n  \"modelName\": \"그랜져\",\n  \"modelCode\": \"HG001\",\n  \"vendor\": \"현대\",\n  \"modelYear\" : \"2017\",\n  \"missionType\" : \"AUTO\",\n  \"fuelType\" : \"DIESEL\",\n  \"mileage\" : 11100,\n  \"category\" : \"ETC\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/vehicle",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "vehicle"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.1-2 드라이버 생성",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "postman.setEnvironmentVariable(\"driverId\", jsonData.id.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\":\"driver1111\",\n  \"email\": \"driver1111@test.com\",\n  \"phone\": \"010-0000-7886\",\n  \"password\": \"cccc\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/driver",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "driver"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.2-1 디렉터에 차량 할당",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "bf748b30-4433-46a1-b9dd-e836c83909d8",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/director/{{directorId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "vehicle",
+                "{{vehicleId}}",
+                "director",
+                "{{directorId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.3  차량 정보 조회",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "vehicle",
+                "{{vehicleId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.4-1 차량 리스트 조회(회사)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company/{{companyId1}}/vehicles?limit=10",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company",
+                "{{companyId1}}",
+                "vehicles"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.4-2 차량 리스트 조회(디렉터)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenDIRECTOR}}"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{url}}/api/tre/v1/director/{{directorId}}/vehicles?limit=10",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "director",
+                "{{directorId}}",
+                "vehicles"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.5-1 위임회사 등록1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "38218968-9562-4e58-a2a1-7b926612ae5e",
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"toCompanyId\":{\n    \"id\":\"{{co-companyId1}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company/{{companyId1}}/relation/company",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company",
+                "{{companyId1}}",
+                "relation",
+                "company"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.5-2 위임회사 등록2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"toCompanyId\":{\n    \"id\":\"{{co-companyId2}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company/{{companyId1}}/relation/company",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company",
+                "{{companyId1}}",
+                "relation",
+                "company"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.5-3 위임회사 등록3",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"toCompanyId\":{\n    \"id\":\"{{co-companyId3}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company/{{companyId1}}/relation/company",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company",
+                "{{companyId1}}",
+                "relation",
+                "company"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.5-4 위임회사 등록4",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"toCompanyId\":{\n    \"id\":\"{{co-companyId4}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company/{{companyId1}}/relation/company",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company",
+                "{{companyId1}}",
+                "relation",
+                "company"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.7 위임회사 리스트 조회",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company/{{companyId1}}/relation/companies?limit=3",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company",
+                "{{companyId1}}",
+                "relation",
+                "companies"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.8 위임회사1에 차량 할당",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleId\":{\n    \"id\":\"{{vehicleId}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company/{{co-companyId1}}/relation/vehicle",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company",
+                "{{co-companyId1}}",
+                "relation",
+                "vehicle"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "fbf45b6c-d77c-4aca-a4f6-b4f8148aeb64",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "f2b7a422-9642-4bdb-8c61-6129a92fae7f",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. 위임회사 정보 생성 및 할당",
+      "description": "",
+      "item": [
+        {
+          "name": "3.1 위임회사  로그인",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "6e7ea5a7-b0cb-445c-a072-50c1e657b9c1",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+                  "tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "var schema = {",
+                  "    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+                  "",
+                  "    \"type\" : \"object\",",
+                  "    \"required\" : [ \"token\", \"refreshToken\" ],",
+                  "    \"properties\" : {",
+                  "        \"token\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        ",
+                  "        \"refreshToken\" : {",
+                  "            \"type\" : \"string\"",
+                  "        }",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Schema is valid', function() {",
+                  "    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+                  "});",
+                  "",
+                  "postman.setGlobalVariable(\"tokenCOO\", jsonData.token);",
+                  "postman.setGlobalVariable(\"refreshTokenCOO\", jsonData.refreshToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"co-operation1@uangel.com\",\"password\":\"co-pwdOperation\"}"
+            },
+            "url": {
+              "raw": "{{url}}/api/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.2.1 위임회사 디렉터 생성1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "9a723d13-40c6-4092-a869-3ac47099d232",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+                  "tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "var schema = {",
+                  "    ",
+                  "    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+                  "    ",
+                  "    \"definitions\" : {",
+                  "        \"id\" : {",
+                  "            \"type\" : \"object\",",
+                  "            \"properties\" : {",
+                  "                \"id\" : {",
+                  "                    \"type\" : \"string\",",
+                  "                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+                  "                }",
+                  "            }",
+                  "        },",
+                  "        \"phoneNo\":{",
+                  "            \"type\": \"string\",",
+                  "            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+                  "        },",
+                  "        \"email\":{",
+                  "            \"type\": \"string\",",
+                  "            \"format\": \"email\" ",
+                  "        },",
+                  "    },",
+                  "    ",
+                  "    \"type\" : \"object\",",
+                  "    ",
+                  "    \"properties\" : {",
+                  "        \"id\" : { ",
+                  "            \"$ref\": \"#/definitions/id\" ",
+                  "        },",
+                  "        \"createdTime\" : { ",
+                  "            \"type\" : \"integer\" ",
+                  "        },",
+                  "        \"companyId\" : {",
+                  "            \"$ref\": \"#/definitions/id\" ",
+                  "        },",
+                  "        \"name\" : { ",
+                  "            \"type\" : \"string\" ",
+                  "        },",
+                  "        \"authority\" : { ",
+                  "            \"type\" : \"string\" , \"enum\" : [\"DIRECTOR\"]",
+                  "        },",
+                  "        \"phone\" : { ",
+                  "            \"$ref\": \"#/definitions/phoneNo\" ",
+                  "        },",
+                  "        \"email\" : { ",
+                  "            \"$ref\": \"#/definitions/email\"  ",
+                  "        },",
+                  "        \"passwordUpdatedTime\" : { \"type\" : \"integer\" },",
+                  "        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] }",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Schema is valid', function() {",
+                  "    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+                  "});",
+                  "",
+                  "postman.setEnvironmentVariable(\"co-directorId1\", jsonData.id.id);",
+                  "postman.setGlobalVariable(\"co-directorId1\", jsonData.id.id);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenCOO}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\":\"디렉터생성1\",\n  \"email\": \"co-createDirector@uangel.com\",\n  \"phone\": \"019-3890-3890\",\n  \"password\": \"uangel123\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/director",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "director"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.2.2 위임회사 디렉터 생성2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "7d003a3f-036c-404f-86d8-4f42478add6e",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+                  "tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "var schema = {",
+                  "    ",
+                  "    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+                  "    ",
+                  "    \"definitions\" : {",
+                  "        \"id\" : {",
+                  "            \"type\" : \"object\",",
+                  "            \"properties\" : {",
+                  "                \"id\" : {",
+                  "                    \"type\" : \"string\",",
+                  "                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+                  "                }",
+                  "            }",
+                  "        },",
+                  "        \"phoneNo\":{",
+                  "            \"type\": \"string\",",
+                  "            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+                  "        },",
+                  "        \"email\":{",
+                  "            \"type\": \"string\",",
+                  "            \"format\": \"email\" ",
+                  "        },",
+                  "    },",
+                  "    ",
+                  "    \"type\" : \"object\",",
+                  "    ",
+                  "    \"properties\" : {",
+                  "        \"id\" : { ",
+                  "            \"$ref\": \"#/definitions/id\" ",
+                  "        },",
+                  "        \"createdTime\" : { ",
+                  "            \"type\" : \"integer\" ",
+                  "        },",
+                  "        \"companyId\" : {",
+                  "            \"$ref\": \"#/definitions/id\" ",
+                  "        },",
+                  "        \"name\" : { ",
+                  "            \"type\" : \"string\" ",
+                  "        },",
+                  "        \"authority\" : { ",
+                  "            \"type\" : \"string\" , \"enum\" : [\"DIRECTOR\"]",
+                  "        },",
+                  "        \"phone\" : { ",
+                  "            \"$ref\": \"#/definitions/phoneNo\" ",
+                  "        },",
+                  "        \"email\" : { ",
+                  "            \"$ref\": \"#/definitions/email\"  ",
+                  "        },",
+                  "        \"passwordUpdatedTime\" : { \"type\" : \"integer\" },",
+                  "        \"additionalInfo\" : { \"type\" : [\"object\", \"string\", \"null\"] }",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Schema is valid', function() {",
+                  "    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+                  "});",
+                  "",
+                  "postman.setEnvironmentVariable(\"co-directorId2\", jsonData.id.id);",
+                  "postman.setGlobalVariable(\"co-directorId2\", jsonData.id.id);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenCOO}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\":\"위임디렉터생성2\",\n  \"email\": \"co-createDirector2@uangel.com\",\n  \"phone\": \"019-3890-3893\",\n  \"password\": \"uangel123\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/director",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "director"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.3 위임회사 드라이버 생성",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "26449159-97f0-46e9-a4e4-973af2b2f289",
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "postman.setEnvironmentVariable(\"co-driverId\", jsonData.id.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenCOO}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\":\"co-driver12222\",\n  \"email\": \"co-driver12222@co-test.com\",\n  \"phone\": \"011-0990-7886\",\n  \"password\": \"cddc\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/driver",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "driver"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.4 위임차량에 위임회사 디렉터 할당(CO)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "222e2b5e-fb64-43f8-8df1-3c2e24382cd8",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 403\", function(){",
+                  "    pm.response.to.have.status(403);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+                  ""
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "b2b11691-ab70-47ba-b4ba-d1a82db265dd",
+                "type": "text/javascript",
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenCOO}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleId\": {\n    \"id\": \"{{vehicleId}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/director/{{co-directorId1}}/relation/vehicle",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "director",
+                "{{co-directorId1}}",
+                "relation",
+                "vehicle"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.5 위임차량에 위임드라이버 할당(CO)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenCOO}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleId\":{\n    \"id\":\"{{vehicleId}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/driver/{{co-driverId}}/relation/vehicle",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "driver",
+                "{{co-driverId}}",
+                "relation",
+                "vehicle"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.6 위임차량에 디렉터에 차량 할당(MA)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "222e2b5e-fb64-43f8-8df1-3c2e24382cd8",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 403\", function(){",
+                  "    pm.response.to.have.status(403);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+                  ""
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "b2b11691-ab70-47ba-b4ba-d1a82db265dd",
+                "type": "text/javascript",
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleId\": {\n    \"id\": \"{{vehicleId}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/director/{{directorId}}/relation/vehicle",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "director",
+                "{{directorId}}",
+                "relation",
+                "vehicle"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.8 위임받은 차량 리스트조회 (디렉터)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenCOO}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleId\":{\n    \"id\":\"{{vehicleId}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/director/{{co-directorId1}}/relation/vehicles?limit=10",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "director",
+                "{{co-directorId1}}",
+                "relation",
+                "vehicles"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.8 위임받은 차량 디렉터_운전자조회(위임회사)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenCOO}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleId\":{\n    \"id\":\"{{vehicleId}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company/{{co-companyId1}}/relation/vehicle/{{vehicleId}}/users?limit=10",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company",
+                "{{co-companyId1}}",
+                "relation",
+                "vehicle",
+                "{{vehicleId}}",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.8-1 위임회사 디렉터 로그인1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "76d02d8f-6930-42cf-bc5c-761d8f247cda",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+                  "tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "var schema = {",
+                  "    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+                  "",
+                  "    \"type\" : \"object\",",
+                  "    \"required\" : [ \"token\", \"refreshToken\" ],",
+                  "    \"properties\" : {",
+                  "        \"token\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        ",
+                  "        \"refreshToken\" : {",
+                  "            \"type\" : \"string\"",
+                  "        }",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Schema is valid', function() {",
+                  "    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+                  "});",
+                  "",
+                  "postman.setGlobalVariable(\"tokenCOODIRECTOR1\", jsonData.token);",
+                  "postman.setGlobalVariable(\"refreshTokenCOODIRECTOR1\", jsonData.refreshToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"co-createDirector@uangel.com\",\"password\":\"uangel123\"}"
+            },
+            "url": {
+              "raw": "{{url}}/api/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.8-2 위임회사 디렉터 로그인2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "9d32982d-9a52-41f0-ba15-67a7628fe77f",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+                  "tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "var schema = {",
+                  "    \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+                  "",
+                  "    \"type\" : \"object\",",
+                  "    \"required\" : [ \"token\", \"refreshToken\" ],",
+                  "    \"properties\" : {",
+                  "        \"token\" : {",
+                  "            \"type\" : \"string\"",
+                  "        },",
+                  "        ",
+                  "        \"refreshToken\" : {",
+                  "            \"type\" : \"string\"",
+                  "        }",
+                  "    }",
+                  "}",
+                  "",
+                  "pm.test('Schema is valid', function() {",
+                  "    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+                  "});",
+                  "",
+                  "postman.setGlobalVariable(\"tokenCOODIRECTOR2\", jsonData.token);",
+                  "postman.setGlobalVariable(\"refreshTokenCOODIRECTOR2\", jsonData.refreshToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"co-createDirector2@uangel.com\",\"password\":\"uangel123\"}"
+            },
+            "url": {
+              "raw": "{{url}}/api/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.9-1 위임받은 차량 디렉터_운전자조회(디렉터)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenCOODIRECTOR1}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleId\":{\n    \"id\":\"{{vehicleId}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company/{{co-companyId1}}/relation/vehicle/{{vehicleId}}/users?limit=10",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company",
+                "{{co-companyId1}}",
+                "relation",
+                "vehicle",
+                "{{vehicleId}}",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.9-2 위임받은 차량 디렉터_운전자조회(디렉터)-403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenCOODIRECTOR2}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleId\":{\n    \"id\":\"{{vehicleId}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company/{{co-companyId1}}/relation/vehicle/{{vehicleId}}/users?limit=10",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company",
+                "{{co-companyId1}}",
+                "relation",
+                "vehicle",
+                "{{vehicleId}}",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. 위임사 정보 삭제",
+      "description": "",
+      "item": [
+        {
+          "name": "4.1-1 위임 차량에서 위임 드라이버 할당 해제(CO)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenCOO}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleId\":{\n    \"id\":\"{{vehicleId}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/driver/{{co-driverId}}/relation/vehicle/{{vehicleId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "driver",
+                "{{co-driverId}}",
+                "relation",
+                "vehicle",
+                "{{vehicleId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4.2-2 위임 차량에서 위임 디렉터 할당 해제(CO)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenCOO}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/director/{{co-directorId1}}/relation/vehicle/{{vehicleId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "director",
+                "{{co-directorId1}}",
+                "relation",
+                "vehicle",
+                "{{vehicleId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4.2-1 위임 드라이버 삭제",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenCOO}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/director/{{co-driverId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "director",
+                "{{co-driverId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4.2-2 위임 디렉터 삭제",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenCOO}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/director/{{co-directorId1}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "director",
+                "{{co-directorId1}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4.3 위임회사 삭제",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{tokenMA}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company/{{companyId1}}/relation/company/{{co-companyId1}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company",
+                "{{companyId1}}",
+                "relation",
+                "company",
+                "{{co-companyId1}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "9. 삭제",
+      "description": "",
+      "item": [
+        {
+          "name": "9.1 회사정보 조회",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "e81fa8e4-718d-41e7-a04a-9342a5b3240d",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");",
+                  "tests[\"Content-Type header is set\"] = postman.getResponseHeader(postman.getEnvironmentVariable(\"resContentType\"));",
+                  "",
+                  "var jsonData = JSON.parse(responseBody);",
+                  "",
+                  "var schema = {",
+                  "   \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+                  "",
+                  "   \"definitions\" : {",
+                  "        \"id\" : {",
+                  "            \"type\" : \"object\",",
+                  "            \"properties\" : {",
+                  "                \"id\" : {",
+                  "                    \"type\" : \"string\",",
+                  "                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
+                  "                }",
+                  "            }",
+                  "        },",
+                  "        \"email\" : {",
+                  "            \"type\": \"string\", ",
+                  "            \"format\": \"email\" ",
+                  "        },",
+                  "        \"phone\": { ",
+                  "            \"type\": \"string\", ",
+                  "            \"pattern\": /^\\d{3}-\\d{3,4}-\\d{4}$/",
+                  "        }",
+                  "    },",
+                  "",
+                  "   \"definitionCompany\" : {",
+                  "       ",
+                  "       \"list\" : {",
+                  "           \"type\" : \"object\",",
+                  "            ",
+                  "            \"required\" : [ \"id\", \"createdTime\", \"name\", \"master\", \"masterId\", \"picPasswd\", \"picName\", \"picPhone\", \"picEmail\", \"picDivision\", \"sktManagerName\", \"sktManagerEmail\", \"cooperationTask\", \"notifyErrIdleMin\"],",
+                  "",
+                  "            \"properties\" : {",
+                  "                \"id\" : {",
+                  "                    \"$ref\": \"#/definitions/id\" ",
+                  "                },",
+                  "                \"createdTime\" : {",
+                  "                    \"type\" : \"number\"",
+                  "                },",
+                  "                \"name\" : {",
+                  "                    \"type\" : \"string\"",
+                  "                },",
+                  "                \"master\" : {",
+                  "                    \"type\" : \"boolean\",",
+                  "                    \"default\" : true",
+                  "                },",
+                  "                \"masterId\" : { ",
+                  "                    \"$ref\": \"#/definitions/id\" ",
+                  "                },",
+                  "               \"picPasswd\" : {",
+                  "                    \"type\" : \"string\"",
+                  "                },",
+                  "                \"picName\" : {",
+                  "                    \"type\" : \"string\"",
+                  "                }, ",
+                  "                \"picPhone\" : {",
+                  "                    \"$ref\": \"#/definitions/phone\" ",
+                  "                },",
+                  "                \"picEmail\" : {",
+                  "                    \"$ref\": \"#/definitions/email\" ",
+                  "                },",
+                  "                \"picDivision\" :{",
+                  "                    \"type\" : \"string\"",
+                  "                },",
+                  "                \"sktManagerName\" : {",
+                  "                    \"type\" : \"string\"",
+                  "                },",
+                  "                \"sktManagerEmail\" : {",
+                  "                    \"$ref\": \"#/definitions/email\" ",
+                  "                },",
+                  "                \"cooperationTask\" : {",
+                  "                    \"type\" : \"string\"",
+                  "                },",
+                  "                \"description\" : {",
+                  "                    \"type\" : \"string\"",
+                  "                }, ",
+                  "                \"notifyErrIdleMin\" : {",
+                  "                    \"type\" : \"number\"",
+                  "                }",
+                  "            }",
+                  "        }",
+                  "    } ,",
+                  "",
+                  "    \"type\" : \"object\",",
+                  "    \"required\" : [ \"data\"],",
+                  "",
+                  "    \"properties\" : {",
+                  "        \"data\" : [{",
+                  "            \"$ref\" : \"#/definitionCompany/list\" ",
+                  "            } ]",
+                  "    }",
+                  "}",
+                  "",
+                  "tests[\"Valid scehma\"] = tv4.validate(jsonData, schema);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{url}}/api/tre/v1/companies/all?limit=30",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "companies",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "30"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "9.2 운영사 삭제",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "0b3e9353-31e6-43aa-aa18-b1137fc1ec03",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status code is 200\", function(){",
+                  "    pm.response.to.have.status(200);    ",
+                  "});",
+                  "",
+                  "tests[\"Response time is acceptable\"] = responseTime < postman.getEnvironmentVariable(\"resTime\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/api/tre/v1/company/{{companyId1}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "tre",
+                "v1",
+                "company",
+                "{{companyId1}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,8 +1,7 @@
 {
 	"info": {
-		"name": "TEST-V1_1-Packet",
-		"_postman_id": "90db0d17-5ba5-489e-755e-6e065c970421",
-		"description": "",
+		"_postman_id": "9ee795ac-fc0c-4461-a205-2d3d2a58a2c8",
+		"name": "TEST-V1_2-VehicleDiagnostic",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -57,8 +56,7 @@
 								"auth",
 								"login"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -68,7 +66,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "63402556-a073-49c9-b283-ac457710c448",
+								"id": "55abcc6b-d8f4-40eb-ae57-959b8bb92a46",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"status code is 200\", function(){",
@@ -162,7 +160,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\":\"packettest\",\n  \"serviceType\":\"packettest\", \n  \"picName\":\"packettest\", \n  \"picEmail\":\"test@packettest.com\", \n  \"picPhone\":\"010-6662-3348\",\n  \"picPasswd\":\"test1234\",\n  \"picDivision\":\"사업1팀\",\n  \"sktManagerName\":\"manager1\",\n  \"sktManagerEmail\":\"xyz@xxx.com\",\n  \"cooperationTask\":\"수리\",\n  \"description\":\"additional description\"\n}"
+							"raw": "{\n  \"name\":\"vehiclediagnostic\",\n  \"serviceType\":\"vehiclediagnostic\", \n  \"picName\":\"vehiclediagnostic\", \n  \"picEmail\":\"test@vehiclediagnostic.com\", \n  \"picPhone\":\"011-4444-5552\",\n  \"picPasswd\":\"test1234\",\n  \"picDivision\":\"사업1팀\",\n  \"sktManagerName\":\"manager1\",\n  \"sktManagerEmail\":\"xyz@xxx.com\",\n  \"cooperationTask\":\"수리\",\n  \"description\":\"additional description\"\n}"
 						},
 						"url": {
 							"raw": "{{url}}/api/tre/v1/company",
@@ -175,8 +173,7 @@
 								"v1",
 								"company"
 							]
-						},
-						"description": null
+						}
 					},
 					"response": []
 				},
@@ -214,7 +211,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"username\":\"test@packettest.com\",\"password\":\"test1234\"}"
+							"raw": "{\"username\":\"test@vehiclediagnostic.com\",\"password\":\"test1234\"}"
 						},
 						"url": {
 							"raw": "{{url}}/api/auth/login",
@@ -226,8 +223,7 @@
 								"auth",
 								"login"
 							]
-						},
-						"description": null
+						}
 					},
 					"response": []
 				},
@@ -308,7 +304,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"vehicleNo\": \"91코3452\",\n  \"modelName\": \"그랜져\",\n  \"modelCode\": \"123\",\n  \"vendor\": \"현대자동차\",\n  \"modelYear\" : \"2017\",\n  \"missionType\" : \"AUTO\",\n  \"fuelType\" : \"DIESEL\",\n  \"mileage\": 10\n}"
+							"raw": "{\n  \"vehicleNo\": \"14가5459\",\n  \"modelName\": \"그랜져\",\n  \"modelCode\": \"123\",\n  \"vendor\": \"현대자동차\",\n  \"modelYear\" : \"2017\",\n  \"missionType\" : \"AUTO\",\n  \"fuelType\" : \"DIESEL\",\n  \"mileage\": 10\n}"
 						},
 						"url": {
 							"raw": "{{url}}/api/tre/v1/vehicle",
@@ -321,8 +317,7 @@
 								"v1",
 								"vehicle"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -419,8 +414,7 @@
 								"{{vehicleId}}",
 								"activate"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -515,8 +509,7 @@
 								"v1",
 								"sensor"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -617,33 +610,55 @@
 								"vehicle",
 								"{{vehicleId}}"
 							]
-						},
-						"description": null
+						}
 					},
 					"response": []
 				}
 			]
 		},
 		{
-			"name": "messagePack_multi 데이터 전송 - MQTT(수동)",
+			"name": "Diagnostic Events 전송 - MQTT (수동)",
 			"description": "",
-			"item": []
+			"item": [],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1ea8094c-a370-45f3-a8ed-908e0dafe2ee",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a42b9804-fb4b-4766-a86b-3f69591b2b72",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
 		},
 		{
-			"name": "Check",
+			"name": "Check Vehicle Diagnostics",
 			"description": "",
 			"item": [
 				{
-					"name": "최신 트립 조회 - OBD",
+					"name": "Diagnostic 리스트 조회",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
+								"id": "baf1318b-edcf-4f65-91e4-d0efb4aecbf8",
+								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"status code is 200\", function(){",
 									"    pm.response.to.have.status(200);    ",
 									"});",
-									"",
 									"var jsonData = JSON.parse(responseBody);",
 									"",
 									"var schema = {",
@@ -656,31 +671,34 @@
 									"            \"properties\" : {",
 									"                \"id\" : {",
 									"                    \"type\" : \"string\",",
-									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
 									"                }",
 									"            }",
 									"        },",
-									"        \"tripData\":{",
+									"        \"vehicleDiagnosticData\" : {",
 									"            \"type\" : \"object\",",
 									"            \"properties\" : {",
 									"                \"id\" : { \"$ref\": \"#/definitions/id\" },",
 									"                \"createdTime\" : { \"type\" : \"integer\" },",
-									"                \"vehicleNo\" : { \"type\" : \"string\" },",
+									"                \"serviceType\" : { \"type\" : \"string\" },",
+									"                \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
 									"                \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
-									"                \"userId\": { \"$ref\": \"#/definitions/id\" },",
-									"                \"startTs\": { \"type\": \"number\"},",
-									"                \"startDt\": { \"type\": \"string\" },",
-									"                \"endTs\": { \"type\": \"number\"},",
-									"                \"endDt\": { \"type\": [\"string\",\"null\"] },",
-									"                \"payload\": {\"type\": [\"object\" , \"null\"]},",
-									"                \"sensorId\": { \"$ref\": \"#/definitions/id\" },",
-									"                \"deviceType\": { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]}",
+									"                \"dtcc\" : { \"type\" : \"string\" },",
+									"                \"dtck\" : { \"type\" : \"integer\" },",
+									"                \"dtcs\" : { \"type\" : \"integer\" }",
 									"            }",
 									"        }",
 									"    },",
 									"    ",
 									"    \"type\" : \"object\",",
-									"    \"$ref\": \"#/definitions/tripData\"",
+									"    \"properties\" : {",
+									"        \"data\" : {",
+									"            \"type\" : \"array\", ",
+									"            \"items\" : {",
+									"                \"$ref\": \"#/definitions/vehicleDiagnosticData\"",
+									"            }",
+									"        }",
+									"    }",
 									"}",
 									"",
 									"pm.test('Schema is valid', function() {",
@@ -688,15 +706,11 @@
 									"});",
 									"console.log(\"Validation failed: \", tv4.error);",
 									"",
-									"pm.test('Device Types valid', function(){",
-									"     pm.expect(jsonData.deviceType).to.be.equal(\"OBD\");",
+									"pm.test('Total dtcc count', function(){",
+									"     pm.expect(jsonData.data.length).to.be.equal(4);",
 									"});",
-									"",
-									"",
 									""
-								],
-								"id": "09d9c567-f64e-4b3f-ac13-bab736b6a8fb",
-								"type": "text/javascript"
+								]
 							}
 						}
 					],
@@ -710,44 +724,40 @@
 						],
 						"body": {},
 						"url": {
-							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/trip/latest?deviceType=OBD",
+							"raw": "{{url}}/api/tre/v1_2/vehicle/{{vehicleId}}/diagnostic?limit=10",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"api",
 								"tre",
-								"v1",
+								"v1_2",
 								"vehicle",
 								"{{vehicleId}}",
-								"trip",
-								"latest"
+								"diagnostic"
 							],
 							"query": [
 								{
-									"key": "deviceType",
-									"value": "OBD",
-									"equals": true
+									"key": "limit",
+									"value": "10"
 								}
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
 				{
-					"name": "최신 마이크로트립 조회 - OBD",
+					"name": "Diagnostic 리스트 조회 dtcc=aaa",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "334cb1bc-df3f-4a35-aeaf-b58b39bda8d4",
+								"id": "093745f2-ecf2-4d1a-897e-96d3af26262d",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"status code is 200\", function(){",
 									"    pm.response.to.have.status(200);    ",
 									"});",
-									"",
 									"var jsonData = JSON.parse(responseBody);",
 									"",
 									"var schema = {",
@@ -760,27 +770,34 @@
 									"            \"properties\" : {",
 									"                \"id\" : {",
 									"                    \"type\" : \"string\",",
-									"                    \"pattern\": /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/",
+									"                    \"pattern\": \"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$\"",
 									"                }",
 									"            }",
 									"        },",
-									"        \"microTripData\":{",
+									"        \"vehicleDiagnosticData\" : {",
 									"            \"type\" : \"object\",",
 									"            \"properties\" : {",
 									"                \"id\" : { \"$ref\": \"#/definitions/id\" },",
 									"                \"createdTime\" : { \"type\" : \"integer\" },",
-									"                \"tripId\" : { \"$ref\": \"#/definitions/id\" },",
+									"                \"serviceType\" : { \"type\" : \"string\" },",
+									"                \"companyId\" : { \"$ref\": \"#/definitions/id\" },",
 									"                \"vehicleId\" : { \"$ref\": \"#/definitions/id\" },",
-									"                \"sensorId\": { \"$ref\": \"#/definitions/id\" },",
-									"                \"ts\": { \"type\": \"number\"},",
-									"                \"payload\": {\"type\": \"array\"},",
-									"                \"deviceType\": { \"type\" : \"string\" , \"enum\" : [ \"OBD\", \"ADAS\",\"GPS\",\"BLACKBOX\" ]}",
+									"                \"dtcc\" : { \"type\" : \"string\" },",
+									"                \"dtck\" : { \"type\" : \"integer\" },",
+									"                \"dtcs\" : { \"type\" : \"integer\" }",
 									"            }",
 									"        }",
 									"    },",
 									"    ",
 									"    \"type\" : \"object\",",
-									"    \"$ref\": \"#/definitions/microTripData\"",
+									"    \"properties\" : {",
+									"        \"data\" : {",
+									"            \"type\" : \"array\", ",
+									"            \"items\" : {",
+									"                \"$ref\": \"#/definitions/vehicleDiagnosticData\"",
+									"            }",
+									"        }",
+									"    }",
 									"}",
 									"",
 									"pm.test('Schema is valid', function() {",
@@ -788,10 +805,9 @@
 									"});",
 									"console.log(\"Validation failed: \", tv4.error);",
 									"",
-									"pm.test('Device Types valid', function(){",
-									"     pm.expect(jsonData.deviceType).to.be.equal(\"OBD\");",
+									"pm.test('aaa dtcc count', function(){",
+									"     pm.expect(jsonData.data.length).to.be.equal(2);",
 									"});",
-									"",
 									"",
 									""
 								]
@@ -808,52 +824,31 @@
 						],
 						"body": {},
 						"url": {
-							"raw": "{{url}}/api/tre/v1/vehicle/{{vehicleId}}/microtrip/latest?deviceType=OBD",
+							"raw": "{{url}}/api/tre/v1_2/vehicle/{{vehicleId}}/diagnostic?limit=10&dtcc=aaa",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"api",
 								"tre",
-								"v1",
+								"v1_2",
 								"vehicle",
 								"{{vehicleId}}",
-								"microtrip",
-								"latest"
+								"diagnostic"
 							],
 							"query": [
 								{
-									"key": "deviceType",
-									"value": "OBD",
-									"equals": true
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "dtcc",
+									"value": "aaa"
 								}
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
-				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "d52412df-2d42-47a5-901b-5798c1e6ea74",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "bbccddcc-5277-43b2-b54e-b59c1c4a63c5",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
 				}
 			]
 		},
@@ -908,8 +903,7 @@
 								"auth",
 								"login"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -958,12 +952,33 @@
 								"company",
 								"{{companyId}}"
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "00b6f9ae-d325-41ae-8e36-f12322e923f2",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "2413c886-435f-4e86-a9b9-ee783d7e6cd2",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }

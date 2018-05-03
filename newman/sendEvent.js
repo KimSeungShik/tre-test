@@ -1,10 +1,5 @@
 var mqtt = require('mqtt');
 
-const GPS_ACCESS_TOKEN = "XYZ12222333344445557";
-const OBD_ACCESS_TOKEN = "XYZ12222333344445555";
-const ADAS_ACCESS_TOKEN = "XYZ12222333344445556";
-const BLACKBOX_ACCESS_TOKEN = "XYZ12222333344445558";
-
 const OBD_DIAGNOSTIC_TY = 101;
 const OBD_COLLISION_WARNING_DRIVING_TY = 102;
 const OBD_COLLISION_WARNING_PARKING_TY = 103;
@@ -12,6 +7,8 @@ const OBD_BATTERY_WARNING_TY = 104;
 const OBD_UNPLUGGED_WARNING_TY = 105;
 const OBD_TURNOFF_WARNING_TY = 106;
 const ADAS_EVENT_TY = 107;
+
+const OBD_MULTI_DIAGNOSTIC_TY = 201;
 
 const topic = "v1/sensors/me/tre";
 
@@ -26,6 +23,14 @@ function sendMsg (client, ty, callback){
       "dtcc": "aaa",
       "dtck": 0,
       "dtcs": 1
+    }
+    break;
+    case 201:
+    msg.ty = 101;
+    msg.pld = {
+      "dtcc": "aaa,bbb,ccc",
+      "dtck": 0,
+      "dtcs": 3
     }
     break;
     case 102:
@@ -80,7 +85,7 @@ function sendADAS (args, callback){
   const adasClient = mqtt.connect({
     host: args.host,
     port: args.port,
-    username: ADAS_ACCESS_TOKEN,
+    username: args.credentials.credentialsIdADAS,
     clean: true,
     keepalive: 60,
     rejectUnauthorized: true,
@@ -97,7 +102,7 @@ function sendBatteryWarning (args, callback){
   const obdClient = mqtt.connect({
     host: args.host,
     port: args.port,
-    username: OBD_ACCESS_TOKEN,
+    username: args.credentials.credentialsIdOBD,
     clean: true,
     keepalive: 60,
     rejectUnauthorized: true,
@@ -114,7 +119,7 @@ function sendCollisionWarningDriving (args, callback){
   const obdClient = mqtt.connect({
     host: args.host,
     port: args.port,
-    username: OBD_ACCESS_TOKEN,
+    username: args.credentials.credentialsIdOBD,
     clean: true,
     keepalive: 60,
     rejectUnauthorized: true,
@@ -131,7 +136,7 @@ function sendCollisionWarningParking (args, callback){
   const obdClient = mqtt.connect({
     host: args.host,
     port: args.port,
-    username: OBD_ACCESS_TOKEN,
+    username: args.credentials.credentialsIdOBD,
     clean: true,
     keepalive: 60,
     rejectUnauthorized: true,
@@ -148,7 +153,7 @@ function sendDiagnostic (args, callback){
   const obdClient = mqtt.connect({
     host: args.host,
     port: args.port,
-    username: OBD_ACCESS_TOKEN,
+    username: args.credentials.credentialsIdOBD,
     clean: true,
     keepalive: 60,
     rejectUnauthorized: true,
@@ -161,11 +166,28 @@ function sendDiagnostic (args, callback){
   });
 }
 
+function sendMultipleDiagnostic (args, callback){
+  const obdClient = mqtt.connect({
+    host: args.host,
+    port: args.port,
+    username: args.credentials.credentialsIdOBD,
+    clean: true,
+    keepalive: 60,
+    rejectUnauthorized: true,
+    protocol: args.protocol
+  });
+
+  obdClient.on('connect', function () {
+    console.log("MQTT: obdClient for sendDiagnostic connected");
+    sendMsg(obdClient, OBD_MULTI_DIAGNOSTIC_TY, callback);
+  });
+}
+
 function sendTrunoffWarning (args, callback){
   const obdClient = mqtt.connect({
     host: args.host,
     port: args.port,
-    username: OBD_ACCESS_TOKEN,
+    username: args.credentials.credentialsIdOBD,
     clean: true,
     keepalive: 60,
     rejectUnauthorized: true,
@@ -182,7 +204,7 @@ function sendUnpluggedWarning (args, callback){
   const obdClient = mqtt.connect({
     host: args.host,
     port: args.port,
-    username: OBD_ACCESS_TOKEN,
+    username: args.credentials.credentialsIdOBD,
     clean: true,
     keepalive: 60,
     rejectUnauthorized: true,
@@ -201,6 +223,7 @@ module.exports = {
   sendCollisionWarningDriving,
   sendCollisionWarningParking,
   sendDiagnostic,
+  sendMultipleDiagnostic,
   sendTrunoffWarning,
   sendUnpluggedWarning
 }

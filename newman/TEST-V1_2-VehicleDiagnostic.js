@@ -2,9 +2,9 @@ const newman = require('newman');
 const moment = require('moment');
 const async = require('async');
 const fs = require('fs');
-const sendTrip = require('./sendTrip');
+const sendEvent = require('./sendEvent');
 
-const testFilePrefix = 'TEST-V1_1-Packet';
+const testFilePrefix = 'TEST-V1_2-VehicleDiagnostic';
 
 if(process.argv.length !== 3) {
     console.log("[Usage] node [testFileName.js] [envFileName.json]");
@@ -56,14 +56,13 @@ function step1_setup(callback){
     newman.run(options,function(err,output){
       const environment = output.environment.values.reference;
       var credentials = {
-        credentialsIdOBD: environment.credentialsIdOBD.value
+        credentialsIdOBD: environment.credentialsIdOBD.value,
       }
-
       callback(null,{environment:output.environment, credentials:credentials});
     });
 }
 
-function step2_sendMPMulti(args, callback){
+function step2_sendEvents(args, callback){
     const mqttArg = {
         host: config.mqttHost,
         port: config.mqttPort,
@@ -71,11 +70,12 @@ function step2_sendMPMulti(args, callback){
         credentials: args.credentials
     }
 
-    async.parallel({
-        sendMpObdMicrotrip: function(innerCallback) {
-          let arg = Object.assign({}, mqttArg);
-          arg.tripId = Math.floor(Math.random() * 100 + 1);
-          sendTrip.sendMpObdMicrotrip(arg, innerCallback);
+    async.series({
+        sendDiagnostic: function(innerCallback) {
+          sendEvent.sendDiagnostic(mqttArg, innerCallback);
+        },
+        sendMultipleDiagnostic: function(innerCallback) {
+          sendEvent.sendMultipleDiagnostic(mqttArg, innerCallback);
         }
     }, function(err, results) {
         if(err != null){
@@ -88,8 +88,8 @@ function step2_sendMPMulti(args, callback){
     });
 }
 
-function step3_check(args, callback){
-    const options = makeNewmanOption(args.environment, 'Check');
+function step3_checkEvents(args, callback){
+    const options = makeNewmanOption(args.environment, 'Check Vehicle Diagnostics');
 
     newman.run(options,function(err,output){
         callback(null,{environment:output.environment});
@@ -106,8 +106,8 @@ function step4_cleanup(args, callback){
 
 async.waterfall([
     step1_setup,
-    step2_sendMPMulti,
-    step3_check,
+    step2_sendEvents,
+    step3_checkEvents,
     step4_cleanup
 ],
 function(err, results) {
